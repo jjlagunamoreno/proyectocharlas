@@ -28,19 +28,17 @@
    ```bash
    git clone https://github.com/tu-usuario/proyecto-charlas.git
 
-    Accede al directorio del proyecto:
+Accede al directorio del proyecto:
 
-cd proyecto-charlas
+    cd proyecto-charlas
 
 Instala las dependencias:
 
     npm install
 
-Uso
+Inicia el servidor de desarrollo:
 
-    Inicia el servidor de desarrollo:
-
-npm run serve
+    npm run serve
 
 Abre la aplicación en tu navegador:
 
@@ -58,21 +56,21 @@ Contribución
 
 Si deseas contribuir al proyecto, sigue estos pasos:
 
-    Haz un fork del repositorio.
+1) Haz un fork del repositorio.
 
-    Crea una nueva rama:
+2) Crea una nueva rama:
 
-git checkout -b nueva-funcionalidad
+        git checkout -b nueva-funcionalidad
 
-Realiza tus cambios y haz un commit:
+3) Realiza tus cambios y haz un commit:
 
-git commit -m "Agrega nueva funcionalidad"
+        git commit -m "Agrega nueva funcionalidad"
 
-Haz push a tu rama:
+4) Haz push a tu rama:
 
-    git push origin nueva-funcionalidad
+        git push origin nueva-funcionalidad
 
-    Abre un Pull Request.
+5) Abre un Pull Request.
 
 Licencia
 
