@@ -26,7 +26,7 @@
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/proyecto-charlas.git
+   git clone [https://github.com/tu-usuario/proyecto-charlas.git](https://github.com/jjlagunamoreno/proyectocharlas.git)
 
 Accede al directorio del proyecto:
 
