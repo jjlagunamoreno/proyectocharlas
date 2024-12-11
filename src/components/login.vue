@@ -1,26 +1,32 @@
 <template>
   <div class="login-container">
-    <!-- FORMULARIO DE LOGIN -->
-    <div class="login-box">
+    <div class="login-card">
       <h2>Iniciar Sesión</h2>
       <form @submit.prevent="login">
-        <div class="input-group">
-          <input type="text" v-model="username" required />
+        <!-- INPUT PARA USUARIO -->
+        <div class="input-wrapper">
+          <input type="text" v-model="username" placeholder=" " required />
           <label>Usuario</label>
         </div>
-        <div class="input-group">
-          <input type="password" v-model="password" required />
+        <!-- INPUT PARA CONTRASEÑA -->
+        <div class="input-wrapper">
+          <input type="password" v-model="password" placeholder=" " required />
           <label>Contraseña</label>
         </div>
-        <button type="submit" class="btn-login">Entrar</button>
+        <!-- BOTÓN -->
+        <button type="submit" class="btn-submit">Entrar</button>
       </form>
+      <!-- OPCIÓN REGISTRARSE -->
+      <p class="register-link">
+        ¿No tienes una cuenta? <a href="#" @click="register">Regístrate</a>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "LoginComponent",
+  name: "MinimalLoginComponent",
   data() {
     return {
       username: "",
@@ -29,12 +35,15 @@ export default {
   },
   methods: {
     login() {
-      // PROCESO DE LOGIN
+      // SIMULA PROCESO DE LOGIN
       if (this.username && this.password) {
         alert(`Bienvenido, ${this.username}`);
       } else {
         alert("Por favor, completa todos los campos.");
       }
+    },
+    register() {
+      alert("Redirigiendo a la página de registro...");
     },
   },
 };
@@ -47,98 +56,118 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #1e90ff, #ff6347);
+  background: linear-gradient(120deg, #2980b9, #6dd5fa);
   font-family: "Arial", sans-serif;
-  overflow: hidden;
 }
 
-/* CAJA DE LOGIN */
-.login-box {
+/* TARJETA DE LOGIN */
+.login-card {
   background: white;
-  border-radius: 15px;
-  padding: 40px 30px;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
   text-align: center;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 1.2s ease-in-out;
+  animation: slide-in 0.8s ease-out;
 }
 
-.login-box h2 {
+.login-card h2 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #333;
+  color: #444;
 }
 
-/* GRUPO DE INPUTS */
-.input-group {
+/* ESTILO DE INPUTS */
+.input-wrapper {
   position: relative;
   margin-bottom: 25px;
 }
 
-.input-group input {
+.input-wrapper input {
   width: 100%;
-  padding: 10px 10px 10px 0;
+  padding: 10px 10px 10px 5px;
   font-size: 16px;
   border: none;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid #ddd;
   background: transparent;
   outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.input-group label {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  color: #aaa;
-  font-size: 16px;
-  pointer-events: none;
   transition: all 0.3s ease;
 }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
+.input-wrapper label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #aaa;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label {
   top: -10px;
-  color: #ff6347;
   font-size: 14px;
+  color: #2980b9;
 }
 
-.input-group input:focus {
-  border-color: #ff6347;
+.input-wrapper input:focus {
+  border-bottom-color: #2980b9;
 }
 
-/* BOTÓN DE LOGIN */
-.btn-login {
+/* BOTÓN DE SUBMIT */
+.btn-submit {
   width: 100%;
   padding: 10px 20px;
   font-size: 16px;
+  font-weight: bold;
   color: white;
-  background: #1e90ff;
+  background: #2980b9;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.btn-login:hover {
-  background: #ff6347;
+.btn-submit:hover {
+  background: #6dd5fa;
   transform: translateY(-2px);
 }
 
-.btn-login:active {
+.btn-submit:active {
   transform: translateY(2px);
 }
 
-/* ANIMACIÓN DE FADE-IN */
-@keyframes fadeIn {
+/* ENLACE DE REGISTRO */
+.register-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #777;
+}
+
+.register-link a {
+  color: #2980b9;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #6dd5fa;
+}
+
+/* ANIMACIÓN DE ENTRADA */
+@keyframes slide-in {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 </style>
