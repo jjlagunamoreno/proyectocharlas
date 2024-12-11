@@ -59,6 +59,7 @@ Contribución
 Si deseas contribuir al proyecto, sigue estos pasos:
 
     Haz un fork del repositorio.
+
     Crea una nueva rama:
 
 git checkout -b nueva-funcionalidad
@@ -76,5 +77,3 @@ Haz push a tu rama:
 Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más información.
-
-¡Gracias por usar Charlas Tajamar!
