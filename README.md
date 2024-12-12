@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# Proyecto React - Gestión de Proyecto con Ramas
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este es un proyecto desarrollado en React, comenzado originalmente en Vue. Está diseñado para ser colaborativo, trabajando en equipo con integración de ramas y una estructura organizada.
 
-## Available Scripts
+## 🛠 Librerías Instaladas
 
-In the project directory, you can run:
+El proyecto utiliza las siguientes librerías para su desarrollo:
 
-### `npm start`
+- **Axios**: Manejo de peticiones HTTP.  
+  `npm install --save axios`
+- **Bootstrap**: Estilo y diseño responsivo.  
+  `npm install --save bootstrap`
+- **React Router DOM**: Navegación entre componentes.  
+  `npm install --save react-router-dom`
+- **jQuery y Popper.js**: Compatibilidad con Bootstrap.  
+  `npm install --save jquery popper.js`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 📂 Organización del Proyecto
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Rama Principal: `master`
+- La rama `master` es la **rama final** donde se realizarán los **merges**.
+- Cada integrante del equipo trabaja en su propia rama y, una vez completadas las funcionalidades, hace un merge a `master`.
 
-### `npm test`
+### Ramas de Trabajo
+Cada desarrollador trabajará en su propia rama, por ejemplo:
+- `rama-frontend`
+- `rama-backend`
+- `rama-styles`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Los nombres de las ramas pueden variar según las asignaciones o el área de trabajo.
 
-### `npm run build`
+### Flujo de Trabajo
+1. Clonar el repositorio:
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Crear una nueva rama:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    git checkout -b nombre-rama
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Desarrollar las funcionalidades asignadas.
+Hacer commit de los cambios:
 
-### `npm run eject`
+    git add .
+    git commit -m "Descripción del cambio"
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Subir la rama al repositorio:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    git push origin nombre-rama
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  Solicitar un merge a master mediante un pull request.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+🚀 Iniciar el Proyecto
 
-## Learn More
+  Instalar las dependencias:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Iniciar el servidor de desarrollo:
 
-### Code Splitting
+    npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Accede a la aplicación en: http://localhost:3000
 
-### Analyzing the Bundle Size
+🧑‍💻 Contribuidores
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    Integrante 1: Jorge Ruíz Parra (johe)
+    Integrante 2: Daniel Rodríguez Lancha (anhi)
+    Integrante 3: Jaime Jesús Laguna Moreno (pocajotas)
