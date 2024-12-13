@@ -20,7 +20,7 @@ const Login = () => {
     loginFormRef.current.style.opacity = 1;
     registerFormRef.current.style.opacity = 0;
 
-    col1Ref.current.style.borderRadius = "0 30% 20% 0";
+    col1Ref.current.style.borderRadius = "20px 30% 20% 20px";
   };
 
   const handleRegisterClick = () => {
@@ -33,7 +33,7 @@ const Login = () => {
     loginFormRef.current.style.opacity = 0;
     registerFormRef.current.style.opacity = 1;
 
-    col1Ref.current.style.borderRadius = "0 20% 30% 0";
+    col1Ref.current.style.borderRadius = "20px 20% 30% 20px";
   };
 
   return (
