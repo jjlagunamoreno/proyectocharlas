@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import style from "./login.css";
-import logo from "../../img/logoTajamar.png";
-import flecha from '../../img/right-arrow-alt-regular-24.png'
+import logo from "../../assets/images/logoTajamar.png";
+import flecha from '../../assets/images/right-arrow-alt-regular-24.png'
 
 const Login = () => {
   const loginFormRef = useRef(null);
