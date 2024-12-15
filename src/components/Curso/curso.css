@@ -1,0 +1,19 @@
+.tabla{
+    border-radius: 20px;
+    background-color: rgb(35, 82, 144);
+    color: white;
+    
+}
+
+
+.tabla td,th{
+    padding: 15px;
+}
+
+.tabla td {
+    border: 1px solid rgba(28, 67, 117, 0.64)
+}
+
+.profesor{
+    color: yellow;
+}
