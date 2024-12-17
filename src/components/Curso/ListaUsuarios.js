@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import foto from '../../assets/images/cover-instalaciones-tajamar-uai-1032x688-nueva.jpg'
 import logo from '../../assets/images/logoTajamar.png'
 import axios from 'axios'
-import Global from '../../Global'
+import Global from '../../utils/Global'
 import style from './curso.css'
 
 export class ListaUsuarios extends Component {

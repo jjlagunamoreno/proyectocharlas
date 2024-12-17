@@ -3,7 +3,7 @@ import style from './menu.css'
 import logo from '../../assets/images/logoTajamar.png'
 import curso from '../../assets/images/educacion.png'
 import { NavLink } from 'react-router-dom'
-import Global from '../../Global'
+import Global from '../../utils/Global'
 import axios from 'axios'
 
 const Menu = () => {
