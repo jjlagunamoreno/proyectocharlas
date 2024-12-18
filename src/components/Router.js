@@ -1,20 +1,35 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import About from './About';
-import NotFound404 from './NothingFoundBackground/NothingFoundBackground';
-import Login from './Login/Login';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Menu from './Menu/Menu';
+import Login from './Login/Login';
+import Home from './Home';
+import NotFound404 from './NothingFoundBackground/NothingFoundBackground';
 
 const Router = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsAuthenticated(true);
+        }
+    }, []);
+
     return (
         <BrowserRouter>
-            <Menu />
+            {isAuthenticated && <Menu />}
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/about" element={<About />} />
-                <Route path="*" element={<NotFound404 />} />
+                {isAuthenticated ? (
+                    <>
+                        <Route path="/home" element={<Home />} />
+                        <Route path="*" element={<NotFound404 />} />
+                    </>
+                ) : (
+                    <>
+                        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                        <Route path="*" element={<Navigate to="/" />} />
+                    </>
+                )}
             </Routes>
         </BrowserRouter>
     );

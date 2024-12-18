@@ -1,9 +1,35 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import style from "./login.css";
 import logo from "../../assets/images/logoTajamar.png";
-import flecha from '../../assets/images/right-arrow-alt-regular-24.png'
+import flecha from '../../assets/images/right-arrow-alt-regular-24.png';
+import { useNavigate } from "react-router-dom";
+import ApiService from "../../services/ApiService";
 
-const Login = () => {
+const Login = ({ setIsAuthenticated }) => {
+  const [credentials, setCredentials] = useState({ userName: "", password: "" });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { token } = await ApiService.login(credentials);
+      if (token) {
+        const bearerToken = `Bearer ${token}`;
+        localStorage.setItem('token', bearerToken);
+        setIsAuthenticated(true);
+        navigate("/home");
+      }
+    } catch (err) {
+      setError("Credenciales incorrectas");
+    }
+  };
+
   const loginFormRef = useRef(null);
   const registerFormRef = useRef(null);
   const col1Ref = useRef(null);
@@ -13,26 +39,20 @@ const Login = () => {
   const handleLoginClick = () => {
     loginBtnRef.current.style.backgroundColor = "#21264D";
     registerBtnRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
-
     loginFormRef.current.style.left = "50%";
     registerFormRef.current.style.left = "-50%";
-
     loginFormRef.current.style.opacity = 1;
     registerFormRef.current.style.opacity = 0;
-
     col1Ref.current.style.borderRadius = "20px 30% 20% 20px";
   };
 
   const handleRegisterClick = () => {
     loginBtnRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
     registerBtnRef.current.style.backgroundColor = "#21264D";
-
     loginFormRef.current.style.left = "150%";
     registerFormRef.current.style.left = "50%";
-
     loginFormRef.current.style.opacity = 0;
     registerFormRef.current.style.opacity = 1;
-
     col1Ref.current.style.borderRadius = "20px 20% 30% 20px";
   };
 
@@ -72,32 +92,41 @@ const Login = () => {
             <div className="form-title">
               <span>Inicio de sesión</span>
             </div>
-            <div className="form-input">
-              <div className="input-box">
-                <input
-                  type="text"
-                  className="input-field"
-                  placeholder="Username"
-                  required
-                />
-                <i className="bx bx-user icon"></i>
+            <form onSubmit={handleSubmit}>
+              <div className="form-input">
+                <div className="input-box">
+                  <input
+                    type="text"
+                    name="userName"
+                    className="input-field"
+                    placeholder="Username"
+                    required
+                    value={credentials.userName}
+                    onChange={handleChange}
+                  />
+                  <i className="bx bx-user icon"></i>
+                </div>
+                <div className="input-box">
+                  <input
+                    type="password"
+                    name="password"
+                    className="input-field"
+                    placeholder="Password"
+                    required
+                    value={credentials.password}
+                    onChange={handleChange}
+                  />
+                  <i className="bx bx-lock-alt icon"></i>
+                </div>
+                <div className="input-box">
+                  <button type="submit" className="input-submit">
+                    <span>Iniciar sesión</span>
+                    <img src={flecha} alt="flecha" />
+                  </button>
+                </div>
               </div>
-              <div className="input-box">
-                <input
-                  type="password"
-                  className="input-field"
-                  placeholder="Password"
-                  required
-                />
-                <i className="bx bx-lock-alt icon"></i>
-              </div>
-              <div className="input-box">
-                <button className="input-submit">
-                  <span>Iniciar sesión</span>
-                  <img src={flecha}></img>
-                </button>
-              </div>
-            </div>
+              {error && <p className="error">{error}</p>}
+            </form>
           </div>
 
           <div className="register-form" ref={registerFormRef}>
@@ -135,7 +164,7 @@ const Login = () => {
               <div className="input-box">
                 <button className="input-submit">
                   <span>Registrarse</span>
-                  <img src={flecha}></img>
+                  <img src={flecha} alt="flecha" />
                 </button>
               </div>
             </div>
