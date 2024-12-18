@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
-import NotFound404 from './NotFound404';
+import NotFound404 from './NothingFoundBackground/NothingFoundBackground';
 import Login from './Login/Login';
 import Menu from './Menu/Menu';
 
