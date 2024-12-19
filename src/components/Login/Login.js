@@ -23,7 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
         const bearerToken = `Bearer ${token}`;
         localStorage.setItem('token', bearerToken);
         setIsAuthenticated(true);
-        navigate("/home");
+        navigate("/");
       }
     } catch (err) {
       setError("Credenciales incorrectas");
