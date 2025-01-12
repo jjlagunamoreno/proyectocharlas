@@ -4,6 +4,7 @@ import logo from "../../assets/images/logoTajamar.png";
 import flecha from '../../assets/images/right-arrow-alt-regular-24.png';
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../services/ApiService";
+import Global from "../../utils/Global"; // Importamos Global
 
 const Login = ({ setIsAuthenticated }) => {
   const [credentials, setCredentials] = useState({ userName: "", password: "" });
@@ -21,9 +22,9 @@ const Login = ({ setIsAuthenticated }) => {
       const { token } = await ApiService.login(credentials);
       if (token) {
         const bearerToken = `Bearer ${token}`;
-        localStorage.setItem('token', bearerToken);
+        Global.token = bearerToken; // Guardamos el token en Global
         setIsAuthenticated(true);
-        navigate("/");
+        navigate("/"); // Redirigimos al Home
       }
     } catch (err) {
       setError("Credenciales incorrectas");

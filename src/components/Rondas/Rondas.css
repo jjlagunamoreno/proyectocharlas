@@ -1,0 +1,29 @@
+.rondas-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .rondas-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .ronda-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .ronda-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+  }
+  

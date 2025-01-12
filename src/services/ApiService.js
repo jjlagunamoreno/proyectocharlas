@@ -17,8 +17,8 @@ const ApiService = {
 
             const data = await response.json();
 
-            // Guardar token en localStorage
-            localStorage.setItem("token", "Bearer " + data.response);
+            // Guardar token en Global
+            Global.token = `Bearer ${data.response}`;
 
             // Devolver el rol y el token
             return { token: data.response, role: data.role };
@@ -29,11 +29,11 @@ const ApiService = {
     },
 
     isAuthenticated: () => {
-        return !!localStorage.getItem("token");
+        return !!Global.token; // Verificar si hay un token en Global
     },
 
     logout: () => {
-        localStorage.removeItem("token");
+        Global.token = null; // Eliminar el token de Global
     },
 };
 

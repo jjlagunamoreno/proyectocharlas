@@ -1,60 +1,87 @@
-import React, { Component, useRef } from 'react'
-import style from './menu.css'
-import logo from '../../assets/images/logoTajamar.png'
-import curso from '../../assets/images/educacion.png'
-import { NavLink } from 'react-router-dom'
+import React, { useRef } from "react";
+import style from "./menu.css";
+import logo from "../../assets/images/logoTajamar.png";
+import curso from "../../assets/images/educacion.png";
+import rondas from "../../assets/images/rondas.png";
+import { NavLink } from "react-router-dom";
 
 const Menu = () => {
+  const barraMenu = useRef(null);
+  const txtIconCurso = useRef(null);
+  const txtIconRondas = useRef(null);
+  const iconCurso = useRef(null);
+  const iconRondas = useRef(null);
 
-    const barraMenu = useRef(null);
-    const txtIcon = useRef(null);
-    const icon = useRef(null);
+  const ampliarMenu = () => {
+    barraMenu.current.style.width = "150px";
+    barraMenu.current.style.transition = "1s";
 
-    const ampliarMenu = () => {
-        barraMenu.current.style.width = "150px"
-        barraMenu.current.style.transition = "1s"
+    txtIconCurso.current.style.transition = "2s";
+    txtIconCurso.current.style.color = "white";
+    txtIconCurso.current.style.right = "30px";
 
-        txtIcon.current.style.transition = "2s"
-        txtIcon.current.style.color = "white"
-        txtIcon.current.style.right = "30px"
+    txtIconRondas.current.style.transition = "2s";
+    txtIconRondas.current.style.color = "white";
+    txtIconRondas.current.style.right = "30px";
 
-        icon.current.style.backgroundColor = "rgb(24, 59, 105)"
-        icon.current.style.transition = "0.5s"
-    }
+    iconCurso.current.style.backgroundColor = "rgb(24, 59, 105)";
+    iconCurso.current.style.transition = "0.5s";
 
-    const cerrarMenu = () => {
-        barraMenu.current.style.width = "80px"
-        barraMenu.current.style.transition = "1s"
+    iconRondas.current.style.backgroundColor = "rgb(24, 59, 105)";
+    iconRondas.current.style.transition = "0.5s";
+  };
 
-        txtIcon.current.style.color = "rgb(35, 82, 144)"
-        txtIcon.current.style.transition = "0.5s"
+  const cerrarMenu = () => {
+    barraMenu.current.style.width = "80px";
+    barraMenu.current.style.transition = "1s";
 
-        icon.current.style.backgroundColor = "rgb(35, 82, 144)"
-        icon.current.style.transition = "0.5s"
-    }
+    txtIconCurso.current.style.color = "rgb(35, 82, 144)";
+    txtIconCurso.current.style.transition = "0.5s";
 
-    return (
-        <div>
-            <div className='menu' onMouseEnter={ampliarMenu} onMouseLeave={cerrarMenu}>
-                <div className='barra-iconos' ref={barraMenu}>
-                    <div>
-                        <NavLink to='/'>
-                            <img src={logo} className='logo' />
-                        </NavLink>
-                    </div>
+    txtIconRondas.current.style.color = "rgb(35, 82, 144)";
+    txtIconRondas.current.style.transition = "0.5s";
 
-                    <div className='icon-box' ref={icon}>
-                        <NavLink to='curso'>
-                            <img src={curso} className='icons' />
-                        </NavLink>
-                        <h4 className='txt-icon' ref={txtIcon}>Curso</h4>
-                    </div>
-                </div>
+    iconCurso.current.style.backgroundColor = "rgb(35, 82, 144)";
+    iconCurso.current.style.transition = "0.5s";
 
-            </div>
+    iconRondas.current.style.backgroundColor = "rgb(35, 82, 144)";
+    iconRondas.current.style.transition = "0.5s";
+  };
+
+  return (
+    <div>
+      <div className="menu" onMouseEnter={ampliarMenu} onMouseLeave={cerrarMenu}>
+        <div className="barra-iconos" ref={barraMenu}>
+          {/* Logo */}
+          <div>
+            <NavLink to="/">
+              <img src={logo} className="logo" alt="Logo" />
+            </NavLink>
+          </div>
+
+          {/* Icono de Curso */}
+          <div className="icon-box" ref={iconCurso}>
+            <NavLink to="/curso">
+              <img src={curso} className="icons" alt="Curso" />
+            </NavLink>
+            <h4 className="txt-icon" ref={txtIconCurso}>
+              Curso
+            </h4>
+          </div>
+
+          {/* Icono de Rondas */}
+          <div className="icon-box" ref={iconRondas}>
+            <NavLink to="/rondas">
+              <img src={rondas} className="icons" alt="Rondas" />
+            </NavLink>
+            <h4 className="txt-icon" ref={txtIconRondas}>
+              Rondas
+            </h4>
+          </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-
-export default Menu
+export default Menu;
