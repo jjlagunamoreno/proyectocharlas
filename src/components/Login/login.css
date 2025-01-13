@@ -145,8 +145,13 @@
     font-weight: 600;
 }
 
+.form-input{
+    padding: 10% 10% 0 10%;
+}
+
 .form-inputs{
     width: 100%;
+    padding: 5%;
 }
 
 .input-box{

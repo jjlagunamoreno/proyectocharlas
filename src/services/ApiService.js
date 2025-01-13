@@ -1,8 +1,10 @@
 import Global from "../utils/Global";
 
 const ApiService = {
+    // FUNCIÓN PARA INICIAR SESIÓN
     login: async (credentials) => {
         try {
+            // REALIZA UNA PETICIÓN POST A LA API DE LOGIN
             const response = await fetch(`${Global.urlAlumnos}api/Auth/Login`, {
                 method: "POST",
                 headers: {
@@ -11,16 +13,18 @@ const ApiService = {
                 body: JSON.stringify(credentials),
             });
 
+            // SI EL RESPONSE NO ES EXITOSO, LANZA UN ERROR
             if (!response.ok) {
                 throw new Error("Login failed");
             }
 
+            // PARSEA LA RESPUESTA A JSON
             const data = await response.json();
 
-            // Guardar token en Global
+            // GUARDA EL TOKEN EN GLOBAL
             Global.token = `Bearer ${data.response}`;
 
-            // Devolver el rol y el token
+            // DEVUELVE EL TOKEN Y EL ROL DEL USUARIO
             return { token: data.response, role: data.role };
         } catch (error) {
             console.error("Login error:", error);
@@ -28,12 +32,45 @@ const ApiService = {
         }
     },
 
-    isAuthenticated: () => {
-        return !!Global.token; // Verificar si hay un token en Global
+    // FUNCIÓN PARA REGISTRAR UN NUEVO ALUMNO
+    registerAlumno: async (codigoCurso, alumnoData) => {
+        try {
+            // REALIZA UNA PETICIÓN POST PARA REGISTRAR UN ALUMNO
+            const response = await fetch(
+                `${Global.urlAlumnos}api/Usuarios/NewAlumno/${codigoCurso}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: Global.token, // SE INCLUYE EL TOKEN DE AUTORIZACIÓN
+                    },
+                    body: JSON.stringify(alumnoData),
+                }
+            );
+
+            // SI EL RESPONSE NO ES EXITOSO, LANZA UN ERROR
+            if (!response.ok) {
+                throw new Error("Registration failed");
+            }
+
+            // PARSEA Y DEVUELVE LA RESPUESTA
+            return await response.json();
+        } catch (error) {
+            console.error("Registration error (Alumno):", error);
+            throw error;
+        }
     },
 
+    // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
+    isAuthenticated: () => {
+        // RETORNA TRUE SI EXISTE UN TOKEN EN GLOBAL
+        return !!Global.token;
+    },
+
+    // FUNCIÓN PARA CERRAR SESIÓN
     logout: () => {
-        Global.token = null; // Eliminar el token de Global
+        // ELIMINA EL TOKEN GUARDADO EN GLOBAL
+        Global.token = null;
     },
 };
 
