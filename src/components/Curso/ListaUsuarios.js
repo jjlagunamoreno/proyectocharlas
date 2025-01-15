@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import foto from '../../assets/images/cover-instalaciones-tajamar-uai-1032x688-nueva.jpg'
 import logo from '../../assets/images/logoTajamar.png'
 import axios from 'axios'
-import Global from '../../utils/Global'
+import Global from "../../utils/Global";
 import style from './curso.css'
 
 export class ListaUsuarios extends Component {
@@ -11,12 +11,12 @@ export class ListaUsuarios extends Component {
   }
 
   loadUsuarios = () => {
-    var token = localStorage.getItem('token')
+    var token = Global.token
     let request = "api/usuarios/usuarioscurso/3213"
     let url = Global.urlAlumnos + request
     axios.get(url, {
       headers: {
-        'Authorization': 'Bearer '+ token
+        'Authorization': token
       }
     }).then(response => {
         this.setState({

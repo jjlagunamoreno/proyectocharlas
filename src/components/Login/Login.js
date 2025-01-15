@@ -49,10 +49,12 @@ const Login = ({ setIsAuthenticated }) => {
     e.preventDefault(); // PREVENIR EL COMPORTAMIENTO POR DEFECTO DEL FORMULARIO
     try {
       // LLAMADA AL MÉTODO LOGIN EN ApiService
-      const { token } = await ApiService.login(credentials);
+      const { token, role } = await ApiService.login(credentials);
       if (token) {
         // GUARDAR EL TOKEN EN GLOBAL
         Global.token = `Bearer ${token}`;
+        // GUARDAMOS EL ID DEL ROL DEL USUARIO QUE ACCEDE
+        Global.role = role;
         setIsAuthenticated(true); // ACTUALIZAR EL ESTADO DE AUTENTICACIÓN
         navigate("/"); // REDIRIGIR AL HOME
       }

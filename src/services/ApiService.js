@@ -25,7 +25,7 @@ const ApiService = {
             Global.token = `Bearer ${data.response}`;
 
             // DEVUELVE EL TOKEN Y EL ROL DEL USUARIO
-            return { token: data.response, role: data.role };
+            return { token: data.response, role: data.idrole };
         } catch (error) {
             console.error("Login error:", error);
             throw error;
