@@ -1,29 +1,36 @@
 .rondas-container {
-    padding: 20px;
-    background-color: #f8f9fa;
-  }
-  
-  .rondas-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-  }
-  
-  .ronda-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .ronda-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .error {
-    color: red;
-    text-align: center;
-  }
-  
+  padding: 20px;
+  background-color: #f8f9fa;
+  margin-left: 100px; /* Ajustar margen para no solaparse con el menú */
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.2rem; /* Reducir el título */
+}
+
+.fc-daygrid-day-number {
+  color: black !important; /* Cambiar los números a negro */
+  text-decoration: none; /* Quitar subrayado */
+  font-size: 0.85rem; /* Reducir el tamaño de los números */
+}
+
+.fc-daygrid-day {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fc-daygrid-day:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Resaltar al pasar el mouse */
+}
+
+.past-day {
+  background-color: rgba(220, 220, 220, 0.5); /* Sombreado gris para días pasados */
+}
+
+.fc-event {
+  font-size: 0.9rem; /* Reducir tamaño de eventos */
+  padding: 2px 5px; /* Ajustar el relleno */
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+}

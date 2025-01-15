@@ -1,7 +1,7 @@
 import Global from "../utils/Global";
 
 const ApiService = {
-    // FUNCIÓN PARA INICIAR SESIÓN
+    // -- FUNCIÓN PARA INICIAR SESIÓN --
     login: async (credentials) => {
         try {
             // REALIZA UNA PETICIÓN POST A LA API DE LOGIN
@@ -32,7 +32,7 @@ const ApiService = {
         }
     },
 
-    // FUNCIÓN PARA REGISTRAR UN NUEVO ALUMNO
+    // -- FUNCIÓN PARA REGISTRAR UN NUEVO ALUMNO --
     registerAlumno: async (codigoCurso, alumnoData) => {
         try {
             // REALIZA UNA PETICIÓN POST PARA REGISTRAR UN ALUMNO
@@ -72,6 +72,47 @@ const ApiService = {
         // ELIMINA EL TOKEN GUARDADO EN GLOBAL
         Global.token = null;
     },
+
+    // -- LLAMADA PARA SERVICIO CHARLAS POR RONDA --
+    getCharlasByRonda: async (idRonda) => {
+        try {
+        const response = await fetch(`${Global.urlAlumnos}api/Charlas/CharlasRonda/${idRonda}`, {
+            headers: {
+            Authorization: Global.token,
+            },
+        });
+    
+        if (!response.ok) {
+            throw new Error("Error al obtener las charlas");
+        }
+    
+        return await response.json();
+        } catch (error) {
+        console.error(error);
+        throw error;
+        }
+    },
+    
+    // OBTENER LA INFORMACIÓN DE UNA RONDA POR SU ID
+    getRondaById: async (idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Rondas/${idRonda}`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al obtener la información de la ronda");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getRondaById:", error);
+            throw error;
+        }
+    },
+
 };
 
 export default ApiService;

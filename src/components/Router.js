@@ -4,6 +4,8 @@ import Menu from "./Menu/Menu";
 import Login from "./Login/Login";
 import Home from "./Home";
 import Rondas from "./Rondas/Rondas";
+import Charlas from "./Charlas/Charlas";
+import NuevaCharla from "./NuevaCharla/NuevaCharla";
 import NotFound404 from "./NothingFoundBackground/NothingFoundBackground";
 import ApiService from "../services/ApiService";
 import Curso from "../components/Curso/ListaUsuarios";
@@ -25,6 +27,8 @@ const Router = () => {
                         <Route path="/" element={<Home />} />
                         <Route path="/curso" element={<Curso />} />
                         <Route path="/rondas" element={<Rondas />} />
+                        <Route path="/charlas/:idRonda" element={<Charlas />} />
+                        <Route path="/charlas/:idRonda/nuevacharla" element={<NuevaCharla />} />
                         <Route path="*" element={<NotFound404 />} />
                     </>
                 ) : (
