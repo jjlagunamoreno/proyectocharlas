@@ -3,16 +3,17 @@ import foto from '../../assets/images/cover-instalaciones-tajamar-uai-1032x688-n
 import logo from '../../assets/images/logoTajamar.png'
 import axios from 'axios'
 import Global from "../../utils/Global";
-import style from './curso.css'
+import './curso.css'
+import '../../App.css'
 
-export class ListaUsuarios extends Component {
+export default class ListaUsuarios extends Component {
   state = {
     usuarios: []
   }
 
   loadUsuarios = () => {
     var token = Global.token
-    let request = "api/usuarios/usuarioscurso/3213"
+    let request = "api/Profesor/AlumnosCursoProfesor"
     let url = Global.urlAlumnos + request
     axios.get(url, {
       headers: {
@@ -20,7 +21,7 @@ export class ListaUsuarios extends Component {
       }
     }).then(response => {
         this.setState({
-            usuarios: response.data
+            usuarios: response.data[0].alumnos
         })
     })
   }
@@ -32,43 +33,70 @@ export class ListaUsuarios extends Component {
 
   render() {
     return (
-      <div className='centro-pag'>
+      <div className='contenido'>
         <h1>Desarrollo FullStack 2024/2025</h1>
-        <table className='tabla'>
+        <div className="table__body">
+        <table>
+          <thead>
+            <tr>
+              <th> </th>
+              <th>Alumno</th>
+              <th>Correo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              this.state.usuarios.map((usuario, index) => {
+                return(
+                  <tr>
+                    <td><img src={usuario.alumno.imagen}></img></td>
+                    <td>{usuario.alumno.usuario}</td>
+                    <td>{usuario.alumno.email}</td>
+                    {
+                      usuario.alumno.estadoUsuario === true ? (
+                        <td>
+                        <p class="status active">Activo</p>
+                        </td>
+                      ) : (
+                        <td>
+                        <p class="status inactive">Inactivo</p>
+                        </td>
+                      )
+                    }
+                  </tr>
+                )
+              })
+            }
+            
+          </tbody>
+        </table>
+        {/* <table className='tabla'>
             <thead>
                 <tr>
                     <th></th>
                     <th>Nombre</th>
                     <th>Email</th>
                 </tr>
-                
+           
             </thead>
             <tbody>
             {
               this.state.usuarios.map((usuario, index) => {
-                if (usuario.idRole === 1) { // Verifica si el idRol del usuario es 1
-                  return (
-                    <tr key={index} className='profesor'>
-                      <td><img src={usuario.imagen} className="img-user"/></td>
-                      <td>{usuario.usuario}</td>
-                      <td>{usuario.email}</td>
-                    </tr>
-                  );
-                }
                 return (
                   <tr key={index}>
-                      <td><img src={usuario.imagen} className="img-user"/></td>
-                      <td>{usuario.usuario}</td>
-                      <td>{usuario.email}</td>
+                      <td><img src={usuario.alumno.imagen} className="img-user"/></td>
+                      <td>{usuario.alumno.usuario}</td>
+                      <td>{usuario.alumno.email}</td>
                     </tr>
                 ); // Retorna null si la condición no se cumple
               })
             }
             </tbody>
         </table>
+      </div> */}
       </div>
-    )
-  }
+      </div>
+  )
 }
-
-export default ListaUsuarios
+}

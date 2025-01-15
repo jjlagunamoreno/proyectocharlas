@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Global from "../../utils/Global";
 import "./Rondas.css";
+import "../../App.css"
 
 const Rondas = () => {
   const [rondas, setRondas] = useState([]);
@@ -54,6 +55,7 @@ const Rondas = () => {
   }, []);
 
   return (
+    <div className="contenido">
     <div className="rondas-container">
       {curso && <h1 className="text-center">Curso: {curso}</h1>}
       <h2 className="text-center">Rondas del Curso</h2>
@@ -85,6 +87,7 @@ const Rondas = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };
