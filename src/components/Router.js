@@ -6,6 +6,7 @@ import Home from "./Home";
 import Rondas from "./Rondas/Rondas";
 import NotFound404 from "./NothingFoundBackground/NothingFoundBackground";
 import ApiService from "../services/ApiService";
+import Curso from "../components/Curso/ListaUsuarios";
 
 const Router = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +23,7 @@ const Router = () => {
                 {isAuthenticated ? (
                     <>
                         <Route path="/" element={<Home />} />
+                        <Route path="/curso" element={<Curso />} />
                         <Route path="/rondas" element={<Rondas />} />
                         <Route path="*" element={<NotFound404 />} />
                     </>
