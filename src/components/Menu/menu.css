@@ -1,0 +1,60 @@
+.menu {
+    width: 80px;
+    height: 100%;
+    background-color: rgb(35, 82, 144);
+    color: white;
+    position: fixed;
+    align-items: center;
+    transition: 1s;
+}
+
+.menu:hover{
+    width: 200px;
+    transition: 1s;
+}
+
+.barra-iconos{
+    position: absolute;
+    left: 9%;
+    width: 80px;
+    height: 90vh;
+    margin: 0 auto;
+    margin-top: 40px;
+    align-items: center;
+    display: block;
+    flex-direction: column;
+}
+
+.logo{
+    position: relative;
+    margin-left: 8px;
+    width: 48px;
+    background-color: white;
+    border-radius: 100%;
+    margin-bottom: 50px;
+}
+.txt-icon{
+    position: absolute;
+    float: right;
+    z-index: -1;
+    color: rgb(35, 82, 144);
+    font-size: 16px;
+}
+.icon-box{
+    z-index: 10;
+    margin-bottom:70px;
+    width: 64px;
+}
+
+.icons{
+    position: absolute;
+    width: 32px;
+    margin-left: 15px;
+}
+.boton{
+    background-color: lightcyan;
+    border: 0px;
+    font-size: 10px;
+    width: 60px;
+    margin-left: 2px;
+}

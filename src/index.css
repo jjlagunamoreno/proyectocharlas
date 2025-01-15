@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.centro-pag{
+  margin-left: 35%;
+}
+
+.img-user{
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  border-radius: 100%;
+}
