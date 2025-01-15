@@ -1,5 +1,7 @@
 const Global = {
-    urlApiGlobal: "https://apicharlasalumnostajamar.azurewebsites.net/"
+    urlAlumnos: "https://apicharlasalumnostajamar.azurewebsites.net/",
+    token: null,
+    role: null
 };
 
 export default Global;
