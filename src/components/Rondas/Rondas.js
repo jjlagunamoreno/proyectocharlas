@@ -7,6 +7,7 @@ import Global from "../../utils/Global";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import "./Rondas.css";
+import "../../App.css"
 
 const Rondas = () => {
   const [rondas, setRondas] = useState([]); // Listado de rondas
@@ -90,6 +91,7 @@ const Rondas = () => {
   };
 
   return (
+    <div className="contenido">
     <div className="rondas-container">
       {curso && <h1 className="text-center">CALENDARIO - {curso}</h1>}
       {error && <p className="error">{error}</p>}
@@ -130,6 +132,7 @@ const Rondas = () => {
           }
         />
       )}
+    </div>
     </div>
   );
 };
