@@ -61,6 +61,29 @@ const ApiService = {
         }
     },
 
+    // FUNCIÓN PARA OBTENER EL PERFIL DEL USUARIO
+    getUserProfile: async () => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/Perfil`, {
+                method: "GET",
+                headers: {
+                    Authorization: Global.token, // SE INCLUYE EL TOKEN DE AUTORIZACIÓN
+                },
+            });
+
+            // SI EL RESPONSE NO ES EXITOSO, LANZA UN ERROR
+            if (!response.ok) {
+                throw new Error("Failed to fetch user profile");
+            }
+
+            // PARSEA Y DEVUELVE LA RESPUESTA
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+            throw error;
+        }
+    },
+
     // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
     isAuthenticated: () => {
         // RETORNA TRUE SI EXISTE UN TOKEN EN GLOBAL

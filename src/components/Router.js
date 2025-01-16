@@ -9,6 +9,7 @@ import NuevaCharla from "./NuevaCharla/NuevaCharla";
 import NotFound404 from "./NothingFoundBackground/NothingFoundBackground";
 import ApiService from "../services/ApiService";
 import Curso from "../components/Curso/ListaUsuarios";
+import Perfil from "./Perfil/Perfil";
 
 const Router = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,6 +26,7 @@ const Router = () => {
                 {isAuthenticated ? (
                     <>
                         <Route path="/" element={<Home />} />
+                        <Route path="/perfil" element={<Perfil/>}/>
                         <Route path="/curso" element={<Curso />} />
                         <Route path="/rondas" element={<Rondas />} />
                         <Route path="/charlas/:idRonda" element={<Charlas />} />
