@@ -1,6 +1,9 @@
 import Global from "../utils/Global";
 
 const ApiService = {
+    //--
+    // COMPONENTE Login
+    //--
     // -- FUNCIÓN PARA INICIAR SESIÓN --
     login: async (credentials) => {
         try {
@@ -61,6 +64,22 @@ const ApiService = {
         }
     },
 
+    // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
+    isAuthenticated: () => {
+        // RETORNA TRUE SI EXISTE UN TOKEN EN GLOBAL
+        return !!Global.token;
+    },
+
+    // FUNCIÓN PARA CERRAR SESIÓN
+    logout: () => {
+        // ELIMINA EL TOKEN GUARDADO EN GLOBAL
+        Global.token = null;
+    },
+
+    //--
+    // COMPONENTE Perfil
+    //--
+
     // FUNCIÓN PARA OBTENER EL PERFIL DEL USUARIO
     getUserProfile: async () => {
         try {
@@ -84,17 +103,9 @@ const ApiService = {
         }
     },
 
-    // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
-    isAuthenticated: () => {
-        // RETORNA TRUE SI EXISTE UN TOKEN EN GLOBAL
-        return !!Global.token;
-    },
-
-    // FUNCIÓN PARA CERRAR SESIÓN
-    logout: () => {
-        // ELIMINA EL TOKEN GUARDADO EN GLOBAL
-        Global.token = null;
-    },
+    //--
+    // COMPONENTE Rondas y Charlas
+    //--
 
     // -- LLAMADA PARA SERVICIO CHARLAS POR RONDA --
     getCharlasByRonda: async (idRonda) => {
@@ -119,22 +130,23 @@ const ApiService = {
     // OBTENER LA INFORMACIÓN DE UNA RONDA POR SU ID
     getRondaById: async (idRonda) => {
         try {
-            const response = await fetch(`${Global.urlAlumnos}api/Rondas/${idRonda}`, {
-                headers: {
-                    Authorization: Global.token,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Error al obtener la información de la ronda");
-            }
-
-            return await response.json();
+          const response = await fetch(`${Global.urlAlumnos}api/Rondas/${idRonda}`, {
+            headers: { Authorization: Global.token },
+          });
+      
+          if (!response.ok) {
+            throw new Error("Error al obtener la información de la ronda");
+          }
+      
+          const data = await response.json();
+          // Asegúrate de que las fechas sean objetos Date
+          data.fechaCierre = data.fechaCierre ? new Date(data.fechaCierre) : null;
+          return data;
         } catch (error) {
-            console.error("Error en getRondaById:", error);
-            throw error;
+          console.error("Error en getRondaById:", error);
+          throw error;
         }
-    },
+      },      
 
 };
 

@@ -10,12 +10,13 @@ const Charlas = () => {
   const [charlas, setCharlas] = useState([]);
   const [error, setError] = useState(null);
   const [modulo, setModulo] = useState("Módulo Desconocido");
-  const [fechaCierre, setFechaCierre] = useState(null);
+  const [fechaPresentacion, setFechaPresentacion] = useState(null);
   const [contador, setContador] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [celebration, setCelebration] = useState(false);
   const [votoSeleccionado, setVotoSeleccionado] = useState(null);
-  const [mostrarBotones, setMostrarBotones] = useState(false); // Control de botones
-  const [cerrada, setCerrada] = useState(false); // Estado de ronda cerrada
+  const [mostrarBotones, setMostrarBotones] = useState(false);
+  const [cerrada, setCerrada] = useState(false);
+  const [datosCargados, setDatosCargados] = useState(false); // Control de datos cargados
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,9 +24,10 @@ const Charlas = () => {
       try {
         const ronda = await ApiService.getRondaById(idRonda);
         setModulo(ronda.descripcionModulo || "Módulo sin nombre");
-        const fechaCierreRonda = new Date(ronda.fechaCierre);
-        setFechaCierre(fechaCierreRonda);
-        setMostrarBotones(fechaCierreRonda > new Date()); // Mostrar botones solo si no ha pasado
+        const fechaPresentacionRonda = new Date(ronda.fechaPresentacion);
+        setFechaPresentacion(fechaPresentacionRonda);
+        setMostrarBotones(fechaPresentacionRonda > new Date());
+        setDatosCargados(true); // Datos cargados correctamente
       } catch (err) {
         console.error("Error al obtener la información de la ronda:", err);
         setError("No se pudo cargar la información de la ronda.");
@@ -47,20 +49,19 @@ const Charlas = () => {
   }, [idRonda]);
 
   useEffect(() => {
-    if (!fechaCierre) return;
+    if (!fechaPresentacion) return;
 
     const interval = setInterval(() => {
       const now = new Date();
-      const difference = fechaCierre - now;
+      const difference = fechaPresentacion.getTime() - now.getTime();
 
       if (difference <= 0) {
         setContador({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        setCerrada(true); // Cambiar estado a cerrada
+        setCerrada(true);
         setCelebration(true);
-        setMostrarBotones(false); // Bloquear botones cuando la fecha de cierre ha pasado
+        setMostrarBotones(false);
 
-        // Detener confeti después de 10 segundos
-        setTimeout(() => setCelebration(false), 10000);
+        setTimeout(() => setCelebration(false), 10000); // Detener confeti después de 10 segundos
         clearInterval(interval);
         return;
       }
@@ -74,10 +75,10 @@ const Charlas = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [fechaCierre]);
+  }, [fechaPresentacion]);
 
   const handleVote = (idCharla) => {
-    if (celebration || votoSeleccionado) return; // Deshabilitar si la ronda terminó o ya se votó
+    if (celebration || votoSeleccionado || cerrada) return;
     setVotoSeleccionado(idCharla);
     alert(`Has votado por la charla: ${idCharla}`);
   };
@@ -87,7 +88,9 @@ const Charlas = () => {
   };
 
   const goToNuevaCharla = () => {
-    navigate(`/charlas/${idRonda}/nuevacharla`);
+    if (!cerrada && datosCargados) {
+      navigate(`/charlas/${idRonda}/nuevacharla`);
+    }
   };
 
   return (
@@ -97,7 +100,7 @@ const Charlas = () => {
         ←
       </button>
       <h1 className="text-center mb-4">{modulo}</h1>
-      {fechaCierre && (
+      {fechaPresentacion && (
         <CountdownContainer cerrada={cerrada}>
           <h3>{cerrada ? "CERRADA" : "SE CIERRA EN"}</h3>
           {!cerrada && (
@@ -107,10 +110,8 @@ const Charlas = () => {
           )}
         </CountdownContainer>
       )}
-      {!cerrada && (
-        <AddButton onClick={goToNuevaCharla}>
-          + Agregar Charla
-        </AddButton>
+      {mostrarBotones && datosCargados && !cerrada && (
+        <AddButton onClick={goToNuevaCharla}>+ Agregar Charla</AddButton>
       )}
       {error && <p className="error">{error}</p>}
       {!error && charlas.length === 0 && (
@@ -120,15 +121,13 @@ const Charlas = () => {
         {charlas.map((charla) => (
           <div
             key={charla.idCharla}
-            className={`charla-card ${votoSeleccionado === charla.idCharla ? "votada" : ""
-              }`}
+            className={`charla-card ${votoSeleccionado === charla.idCharla ? "votada" : ""}`}
           >
             <img
               src={charla.imagenCharla || "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
               alt="Charla"
               className="charla-image"
             />
-
             <div className="charla-info">
               <h3 className="charla-title">{charla.titulo}</h3>
               <p className="charla-description">
@@ -140,10 +139,9 @@ const Charlas = () => {
                 <strong>Duración:</strong> {charla.tiempo} minutos
               </p>
             </div>
-            {mostrarBotones && !votoSeleccionado ? (
+            {mostrarBotones && !votoSeleccionado && !cerrada ? (
               <button
-                className={`vote-btn ${votoSeleccionado === charla.idCharla ? "active" : ""
-                  }`}
+                className={`vote-btn ${votoSeleccionado === charla.idCharla ? "active" : ""}`}
                 onClick={() => handleVote(charla.idCharla)}
               >
                 👍
