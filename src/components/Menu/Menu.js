@@ -57,27 +57,15 @@ const Menu = () => {
       txtIconRondas.current.style.right = "30px";
     }
 
-    if (iconCurso.current) {
-      iconCurso.current.style.backgroundColor = "rgb(24, 59, 105)";
-      iconCurso.current.style.transition = "0.5s";
-    }
-
-    if (iconRondas.current) {
-      iconRondas.current.style.backgroundColor = "rgb(24, 59, 105)";
-      iconRondas.current.style.transition = "0.5s";
-    }
-
     if (txtUserName.current) {
       txtUserName.current.style.transition = "2s";
       txtUserName.current.style.color = "white";
-      txtUserName.current.style.right = "30px";
       txtUserName.current.style.opacity = 1;
     }
 
     if (txtUserCourse.current) {
       txtUserCourse.current.style.transition = "2s";
       txtUserCourse.current.style.color = "white";
-      txtUserCourse.current.style.right = "30px";
       txtUserCourse.current.style.opacity = 1;
     }
   };
@@ -96,16 +84,6 @@ const Menu = () => {
     if (txtIconRondas.current) {
       txtIconRondas.current.style.color = "rgb(35, 82, 144)";
       txtIconRondas.current.style.transition = "0.5s";
-    }
-
-    if (iconCurso.current) {
-      iconCurso.current.style.backgroundColor = "rgb(35, 82, 144)";
-      iconCurso.current.style.transition = "0.5s";
-    }
-
-    if (iconRondas.current) {
-      iconRondas.current.style.backgroundColor = "rgb(35, 82, 144)";
-      iconRondas.current.style.transition = "0.5s";
     }
 
     if (txtUserName.current) {
@@ -162,24 +140,18 @@ const Menu = () => {
 
           {/* Imagen de Perfil */}
           {userImage && (
-            <div style={{ position: 'absolute', bottom: '10px', left: '10px', display: 'flex', alignItems: 'center' }}>
+            <div className="icon-box-profile">
               <img
                 src={userImage}
                 alt="User Profile"
                 className="user-profile-image"
                 onClick={handleProfileClick}
-                style={{
-                  cursor: 'pointer',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%'
-                }}
               />
               <div style={{ marginLeft: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <h4 className="txt-icon" ref={txtUserName} style={{ margin: 0, transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
+                <h4 className="txt-icon-profile" ref={txtUserName} >
                   {userName}
                 </h4>
-                <p className="txt-icon" ref={txtUserCourse} style={{ margin: 0, fontSize: '12px', transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
+                <p className="txt-icon-profile" ref={txtUserCourse} style={{ margin: 0, fontSize: '12px', transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
                   {userCourse}
                 </p>
               </div>
