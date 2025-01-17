@@ -77,23 +77,23 @@ const Menu = () => {
     }
 
     if (txtIconCurso.current) {
-      txtIconCurso.current.style.color = "rgb(35, 82, 144)";
+      txtIconCurso.current.style.color = "#21264d";
       txtIconCurso.current.style.transition = "0.5s";
     }
 
     if (txtIconRondas.current) {
-      txtIconRondas.current.style.color = "rgb(35, 82, 144)";
+      txtIconRondas.current.style.color = "#21264d";
       txtIconRondas.current.style.transition = "0.5s";
     }
 
     if (txtUserName.current) {
-      txtUserName.current.style.color = "rgb(35, 82, 144)";
+      txtUserName.current.style.color = "#21264d";
       txtUserName.current.style.transition = "0.5s";
       txtUserName.current.style.opacity = 0;
     }
 
     if (txtUserCourse.current) {
-      txtUserCourse.current.style.color = "rgb(35, 82, 144)";
+      txtUserCourse.current.style.color = "#21264d";
       txtUserCourse.current.style.transition = "0.5s";
       txtUserCourse.current.style.opacity = 0;
     }
