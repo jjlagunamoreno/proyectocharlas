@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import style from "./login.css";
+import "./login.css";
 import logo from "../../assets/images/logoTajamar.png";
 import flecha from "../../assets/images/right-arrow-alt-regular-24.png";
 import { useNavigate } from "react-router-dom";

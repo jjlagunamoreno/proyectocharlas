@@ -62,11 +62,11 @@ export default function Perfil() {
         {charlas.length === 0 ? (
           <p>No hay charlas propuestas.</p>
         ) : (
-          <div className="charlas-grid">
+          <div className="perfil-charlas-grid">
             {charlas.map((charla, index) => (
-              <div key={index} className="charla-card">
-                <img src={charla.imagenCharla} alt={charla.titulo} className="charla-image" />
-                <div className="charla-content">
+              <div key={index} className="perfil-charla-card">
+                <img src={charla.imagenCharla} alt={charla.titulo} className="perfil-charla-image" />
+                <div className="perfil-charla-content">
                   <h3>{charla.titulo}</h3>
                   <p><strong>Descripción:</strong> {charla.descripcion}</p>
                   <p><strong>Fecha Propuesta:</strong> {new Date(charla.fechaPropuesta).toLocaleDateString()}</p>

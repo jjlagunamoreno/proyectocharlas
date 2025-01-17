@@ -1,6 +1,6 @@
 // ./components/Home.js
 import React from 'react';
-import style from './Home.css'
+import './Home.css'
 import Global from '../utils/Global';
 
 const Home = () => {

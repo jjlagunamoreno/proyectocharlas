@@ -50,7 +50,7 @@ body {
     margin-bottom: 10px;
 }
 
-.charla-item {
+.perfil-charla-item {
     background-color: #fff;
     padding: 15px;
     border-radius: 5px;
@@ -58,25 +58,25 @@ body {
     margin-bottom: 10px;
 }
 
-.charla-item h3 {
+.perfil-charla-item h3 {
     font-size: 1.5em;
     margin-bottom: 5px;
     color: #333;
 }
 
-.charla-item p {
+.perfil-charla-item p {
     font-size: 1em;
     color: #555;
     margin: 5px 0;
 }
 
-.charlas-grid {
+.perfil-charlas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.charla-card {
+.perfil-charla-card {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -84,27 +84,27 @@ body {
     transition: transform 0.3s;
 }
 
-.charla-card:hover {
+.perfil-charla-card:hover {
     transform: translateY(-10px);
 }
 
-.charla-image {
+.perfil-charla-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
-.charla-content {
+.perfil-charla-content {
     padding: 15px;
 }
 
-.charla-content h3 {
+.perfil-charla-content h3 {
     font-size: 1.5em;
     margin-bottom: 10px;
     color: #333;
 }
 
-.charla-content p {
+.perfil-charla-content p {
     font-size: 1em;
     color: #555;
     margin: 5px 0;

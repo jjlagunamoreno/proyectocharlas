@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, useNavigate } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./menu.css";
 import logo from "../../assets/images/logoTajamar.png";
 import curso from "../../assets/images/educacion.png";
 import rondas from "../../assets/images/rondas.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Global from '../../utils/Global'
 import ApiService from "../../services/ApiService";
 
@@ -40,27 +40,32 @@ const Menu = () => {
   };
 
   const ampliarMenu = () => {
-    console.log(txtIconCurso);
-    console.log(txtIconRondas);
+    if (barraMenu.current) {
+      barraMenu.current.style.width = "150px";
+      barraMenu.current.style.transition = "1s";
+    }
 
-    barraMenu.current.style.width = "150px";
-    barraMenu.current.style.transition = "1s";
-
-    if(txtIconCurso.current != null){
+    if (txtIconCurso.current) {
       txtIconCurso.current.style.transition = "2s";
       txtIconCurso.current.style.color = "white";
       txtIconCurso.current.style.right = "30px";
     }
 
-    txtIconRondas.current.style.transition = "2s";
-    txtIconRondas.current.style.color = "white";
-    txtIconRondas.current.style.right = "30px";
+    if (txtIconRondas.current) {
+      txtIconRondas.current.style.transition = "2s";
+      txtIconRondas.current.style.color = "white";
+      txtIconRondas.current.style.right = "30px";
+    }
 
-    iconCurso.current.style.backgroundColor = "rgb(24, 59, 105)";
-    iconCurso.current.style.transition = "0.5s";
+    if (iconCurso.current) {
+      iconCurso.current.style.backgroundColor = "rgb(24, 59, 105)";
+      iconCurso.current.style.transition = "0.5s";
+    }
 
-    iconRondas.current.style.backgroundColor = "rgb(24, 59, 105)";
-    iconRondas.current.style.transition = "0.5s";
+    if (iconRondas.current) {
+      iconRondas.current.style.backgroundColor = "rgb(24, 59, 105)";
+      iconRondas.current.style.transition = "0.5s";
+    }
 
     if (txtUserName.current) {
       txtUserName.current.style.transition = "2s";
@@ -78,21 +83,30 @@ const Menu = () => {
   };
 
   const cerrarMenu = () => {
-    barraMenu.current.style.width = "80px";
-    barraMenu.current.style.transition = "1s";
+    if (barraMenu.current) {
+      barraMenu.current.style.width = "80px";
+      barraMenu.current.style.transition = "1s";
+    }
 
-    if(txtIconCurso.current != null){
+    if (txtIconCurso.current) {
       txtIconCurso.current.style.color = "rgb(35, 82, 144)";
       txtIconCurso.current.style.transition = "0.5s";
     }
-    txtIconRondas.current.style.color = "rgb(35, 82, 144)";
-    txtIconRondas.current.style.transition = "0.5s";
 
-    iconCurso.current.style.backgroundColor = "rgb(35, 82, 144)";
-    iconCurso.current.style.transition = "0.5s";
+    if (txtIconRondas.current) {
+      txtIconRondas.current.style.color = "rgb(35, 82, 144)";
+      txtIconRondas.current.style.transition = "0.5s";
+    }
 
-    iconRondas.current.style.backgroundColor = "rgb(35, 82, 144)";
-    iconRondas.current.style.transition = "0.5s";
+    if (iconCurso.current) {
+      iconCurso.current.style.backgroundColor = "rgb(35, 82, 144)";
+      iconCurso.current.style.transition = "0.5s";
+    }
+
+    if (iconRondas.current) {
+      iconRondas.current.style.backgroundColor = "rgb(35, 82, 144)";
+      iconRondas.current.style.transition = "0.5s";
+    }
 
     if (txtUserName.current) {
       txtUserName.current.style.color = "rgb(35, 82, 144)";

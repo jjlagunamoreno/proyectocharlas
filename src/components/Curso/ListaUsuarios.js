@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import foto from '../../assets/images/cover-instalaciones-tajamar-uai-1032x688-nueva.jpg'
-import logo from '../../assets/images/logoTajamar.png'
 import axios from 'axios'
 import Global from "../../utils/Global";
 import './curso.css'
@@ -50,7 +48,7 @@ export default class ListaUsuarios extends Component {
               this.state.usuarios.map((usuario, index) => {
                 return(
                   <tr>
-                    <td><img src={usuario.alumno.imagen}></img></td>
+                    <td><img src={usuario.alumno.imagen} alt='imagen del usuario'></img></td>
                     <td>{usuario.alumno.usuario}</td>
                     <td>{usuario.alumno.email}</td>
                     {

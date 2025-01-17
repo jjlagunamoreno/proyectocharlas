@@ -1,6 +1,7 @@
 .rondas-container {
   padding: 20px;
   background-color: #f8f9fa;
+  color: black;
   margin-left: 100px; /* Ajustar margen para no solaparse con el menú */
 }
 
