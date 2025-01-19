@@ -58,14 +58,17 @@ const Menu = () => {
     }
 
     if (txtUserName.current) {
-      txtUserName.current.style.transition = "2s";
+      txtUserName.current.style.transition = "1s";
       txtUserName.current.style.color = "white";
+      txtUserName.current.style.left = "80px"
       txtUserName.current.style.opacity = 1;
     }
 
     if (txtUserCourse.current) {
-      txtUserCourse.current.style.transition = "2s";
+      txtUserCourse.current.style.transition = "1s";
       txtUserCourse.current.style.color = "white";
+      txtUserCourse.current.style.left = "80px" 
+      txtUserCourse.current.style.top = "30px" 
       txtUserCourse.current.style.opacity = 1;
     }
   };
@@ -89,12 +92,15 @@ const Menu = () => {
     if (txtUserName.current) {
       txtUserName.current.style.color = "#21264d";
       txtUserName.current.style.transition = "0.5s";
+      txtUserName.current.style.left = "0px" 
       txtUserName.current.style.opacity = 0;
     }
 
     if (txtUserCourse.current) {
       txtUserCourse.current.style.color = "#21264d";
       txtUserCourse.current.style.transition = "0.5s";
+      txtUserCourse.current.style.left = "0px" 
+      txtUserCourse.current.style.top = "0px" 
       txtUserCourse.current.style.opacity = 0;
     }
   };
@@ -146,8 +152,14 @@ const Menu = () => {
                 alt="User Profile"
                 className="user-profile-image"
                 onClick={handleProfileClick}
+                style={{
+                  cursor: 'pointer',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%'
+                }}
               />
-              <div style={{ marginLeft: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <div>
                 <h4 className="txt-icon-profile" ref={txtUserName} >
                   {userName}
                 </h4>
