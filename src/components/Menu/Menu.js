@@ -63,14 +63,6 @@ const Menu = () => {
       txtUserName.current.style.left = "80px"
       txtUserName.current.style.opacity = 1;
     }
-
-    if (txtUserCourse.current) {
-      txtUserCourse.current.style.transition = "1s";
-      txtUserCourse.current.style.color = "white";
-      txtUserCourse.current.style.left = "80px" 
-      txtUserCourse.current.style.top = "30px" 
-      txtUserCourse.current.style.opacity = 1;
-    }
   };
 
   const cerrarMenu = () => {
@@ -94,14 +86,6 @@ const Menu = () => {
       txtUserName.current.style.transition = "0.5s";
       txtUserName.current.style.left = "0px" 
       txtUserName.current.style.opacity = 0;
-    }
-
-    if (txtUserCourse.current) {
-      txtUserCourse.current.style.color = "#21264d";
-      txtUserCourse.current.style.transition = "0.5s";
-      txtUserCourse.current.style.left = "0px" 
-      txtUserCourse.current.style.top = "0px" 
-      txtUserCourse.current.style.opacity = 0;
     }
   };
 
@@ -145,8 +129,11 @@ const Menu = () => {
           </NavLink>
 
           {/* Imagen de Perfil */}
+          
           {userImage && (
+            
             <div className="icon-box-profile">
+              <NavLink to="/perfil">
               <img
                 src={userImage}
                 alt="User Profile"
@@ -159,15 +146,14 @@ const Menu = () => {
                   borderRadius: '50%'
                 }}
               />
+              </NavLink>
               <div>
                 <h4 className="txt-icon-profile" ref={txtUserName} >
                   {userName}
                 </h4>
-                <p className="txt-icon-profile" ref={txtUserCourse} style={{ margin: 0, fontSize: '12px', transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
-                  {userCourse}
-                </p>
               </div>
             </div>
+            
           )}
         </div>
       </div>

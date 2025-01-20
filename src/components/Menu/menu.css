@@ -43,7 +43,8 @@
 
 .txt-icon-profile{
     position: absolute;
-    right: 10px;
+    float: right;
+    left: 0px;
     z-index: 1;
     color: #21264d;
     font-size: 16px;
@@ -58,14 +59,21 @@
 }
 
 .icon-box-profile{
-    z-index:-10;
+    z-index:10;
     padding-top: 5px;
     margin-bottom: 20px;
     display: flex;
-    width: 64px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     position: absolute;
     bottom: 0px;
+    border-radius: 50px;
+    margin-left: 5px;
+}
+
+.icon-box-profile:hover{
+    transition: 0.6s;
+    background-color: #2d356d;
 }
 
 .icon-box:hover {
@@ -91,9 +99,10 @@
 
 .user-profile-image{
     position: absolute;
+    align-items: center;
     z-index: 2;
     width: 40px;
     height: 40px;
-    margin-left: 10px;
+    left: 5px;
     border-radius: 50%;
 }
