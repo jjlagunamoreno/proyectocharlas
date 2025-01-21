@@ -8,11 +8,6 @@
     transition: 1s;
 }
 
-.menu:hover{
-    width: 200px;
-    transition: 1s;
-}
-
 .barra-iconos{
     position: absolute;
     left: 9%;
@@ -61,12 +56,11 @@
 .icon-box-profile{
     z-index:10;
     padding-top: 5px;
-    margin-bottom: 20px;
     display: flex;
     width: 50px;
     height: 50px;
     position: absolute;
-    bottom: 0px;
+    bottom: 10px;
     border-radius: 50px;
     margin-left: 5px;
 }
@@ -79,7 +73,6 @@
 .icon-box:hover {
     transition: 0.6s;
     border-radius: 10%;
-    width: 140px;
     background-color: #2d356d;
 }
 
@@ -105,4 +98,38 @@
     height: 40px;
     left: 5px;
     border-radius: 50%;
+}
+
+.icon-logout {
+    position: relative;
+    height: 16px;
+    opacity: 0;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+}
+
+.box-menu {
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: white;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+  
+.change .bar1 {
+    transform: translate(0, 11px) rotate(-45deg);
+}
+  
+.change .bar2 {opacity: 0;}
+  
+.change .bar3 {
+    transform: translate(0, -11px) rotate(45deg);
 }

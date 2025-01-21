@@ -3,11 +3,13 @@ import "./menu.css";
 import logo from "../../assets/images/logoTajamar.png";
 import curso from "../../assets/images/educacion.png";
 import rondas from "../../assets/images/rondas.png";
+import logout from "../../assets/images/logout.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import Global from '../../utils/Global'
 import ApiService from "../../services/ApiService";
 
 const Menu = () => {
+  const menu = useRef(null);
   const barraMenu = useRef(null);
   const txtIconCurso = useRef(null);
   const txtIconRondas = useRef(null);
@@ -19,6 +21,7 @@ const Menu = () => {
   const navigate = useNavigate();
   const txtUserName = useRef(null);
   const txtUserCourse = useRef(null);
+  const iconLogout = useRef(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -39,7 +42,27 @@ const Menu = () => {
     navigate('/perfil');
   };
 
+  const logOut = () => {
+    Global.token = "";
+    window.location.reload(true);
+  }
+  
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    if (isOpen) {
+      cerrarMenu();
+    } else {
+      ampliarMenu();
+    }
+  };
+
   const ampliarMenu = () => {
+    if (menu.current) {
+      menu.current.style.width = "200px";
+      menu.current.style.transition = "1s";
+    }
+
     if (barraMenu.current) {
       barraMenu.current.style.width = "150px";
       barraMenu.current.style.transition = "1s";
@@ -63,9 +86,23 @@ const Menu = () => {
       txtUserName.current.style.left = "80px"
       txtUserName.current.style.opacity = 1;
     }
+
+    if (iconLogout.current){
+      iconLogout.current.style.transition = "1s";
+      iconLogout.current.style.opacity = "1";
+      iconLogout.current.style.left = "90px";
+      iconLogout.current.style.top = "20px";
+    }
+
+    setIsOpen(true);
   };
 
   const cerrarMenu = () => {
+    if (menu.current) {
+      menu.current.style.width = "80px";
+      menu.current.style.transition = "1s";
+    }
+
     if (barraMenu.current) {
       barraMenu.current.style.width = "80px";
       barraMenu.current.style.transition = "1s";
@@ -87,11 +124,25 @@ const Menu = () => {
       txtUserName.current.style.left = "0px" 
       txtUserName.current.style.opacity = 0;
     }
+
+    if (iconLogout.current){
+      iconLogout.current.style.transition = "0.6s";
+      iconLogout.current.style.opacity = "0";
+      iconLogout.current.style.left = "0px";
+      iconLogout.current.style.top = "0px";
+    }
+
+    setIsOpen(false);
   };
 
   return (
     <div>
-      <div className="menu" onMouseEnter={ampliarMenu} onMouseLeave={cerrarMenu}>
+      <div className="menu" ref={menu}>
+      <div className={`box-menu ${isOpen ? "change" : ""}`} onClick={toggleMenu}>
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+      </div>
         <div className="barra-iconos" ref={barraMenu}>
           {/* Logo */}
           <div>
@@ -152,8 +203,14 @@ const Menu = () => {
                   {userName}
                 </h4>
               </div>
+              <div>
+                <img src={logout}
+                 alt="logout" 
+                 className="icon-logout"
+                 onClick={logOut}
+                 ref={iconLogout}/>
+              </div>
             </div>
-            
           )}
         </div>
       </div>
