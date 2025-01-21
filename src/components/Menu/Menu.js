@@ -137,7 +137,8 @@ const Menu = () => {
 
   return (
     <div>
-      <div className="menu" ref={menu}>
+      <div className={`menu ${isOpen ? "" : "menu-collapsed"}`} ref={menu}>
+
       <div className={`box-menu ${isOpen ? "change" : ""}`} onClick={toggleMenu}>
         <div className="bar1"></div>
         <div className="bar2"></div>
