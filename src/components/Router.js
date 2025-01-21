@@ -10,6 +10,7 @@ import NotFound404 from "./NothingFoundBackground/NothingFoundBackground";
 import ApiService from "../services/ApiService";
 import Curso from "../components/Curso/ListaUsuarios";
 import Perfil from "./Perfil/Perfil";
+import { ProfileImageProvider } from "../context/ProfileImageContext";
 
 const Router = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,27 +21,29 @@ const Router = () => {
     }, []);
 
     return (
-        <BrowserRouter>
-            {isAuthenticated && <Menu />}
-            <Routes>
-                {isAuthenticated ? (
-                    <>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/perfil" element={<Perfil/>}/>
-                        <Route path="/curso" element={<Curso />} />
-                        <Route path="/rondas" element={<Rondas />} />
-                        <Route path="/charlas/:idRonda" element={<Charlas />} />
-                        <Route path="/charlas/:idRonda/nuevacharla" element={<NuevaCharla />} />
-                        <Route path="*" element={<NotFound404 />} />
-                    </>
-                ) : (
-                    <>
-                        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </>
-                )}
-            </Routes>
-        </BrowserRouter>
+        <ProfileImageProvider>
+            <BrowserRouter>
+                {isAuthenticated && <Menu />}
+                <Routes>
+                    {isAuthenticated ? (
+                        <>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/perfil" element={<Perfil/>}/>
+                            <Route path="/curso" element={<Curso />} />
+                            <Route path="/rondas" element={<Rondas />} />
+                            <Route path="/charlas/:idRonda" element={<Charlas />} />
+                            <Route path="/charlas/:idRonda/nuevacharla" element={<NuevaCharla />} />
+                            <Route path="*" element={<NotFound404 />} />
+                        </>
+                    ) : (
+                        <>
+                            <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                            <Route path="*" element={<Navigate to="/" />} />
+                        </>
+                    )}
+                </Routes>
+            </BrowserRouter>
+        </ProfileImageProvider>
     );
 };
 

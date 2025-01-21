@@ -1,19 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ApiService from '../../services/ApiService';
+import FileService from '../../services/FileService';
 import Form from './Form';
 import './Perfil.css'; // Importar el archivo de estilos
+import { ProfileImageContext } from '../../context/ProfileImageContext';
 
 export default function Perfil() {
   const [profile, setProfile] = useState(null);
   const [charlas, setCharlas] = useState([]);
   const [fileUrl, setFileUrl] = useState(null);
+  const { profile: globalProfile, setProfile: setGlobalProfile } = useContext(ProfileImageContext);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profileData = await ApiService.getUserProfile();
         setProfile(profileData.usuario);
+        setGlobalProfile(profileData.usuario);
         setCharlas(profileData.charlas.map(c => c.charla));
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -21,11 +25,27 @@ export default function Perfil() {
     };
 
     fetchProfile();
-  }, []);
+  }, [setGlobalProfile]);
 
-  const onDrop = useCallback(async (acceptedFile) => {
-    setFileUrl(URL.createObjectURL(acceptedFile[0]));
-  }, []);
+  const onDrop = useCallback(async (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = async () => {
+      const buffer = reader.result;
+      const base64 = btoa(
+        new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      try {
+        await FileService.uploadUserImage(profile.idUsuario, file.name, base64);
+        const newFileUrl = URL.createObjectURL(file);
+        setFileUrl(newFileUrl);
+        setGlobalProfile(prevProfile => ({ ...prevProfile, imagen: newFileUrl }));
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    };
+  }, [profile, setGlobalProfile]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
