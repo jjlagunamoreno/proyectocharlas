@@ -61,7 +61,8 @@ const ApiService = {
                 throw new Error("Failed to update user profile");
             }
 
-            return await response.json();
+            const responseData = await response.text();
+            return responseData ? JSON.parse(responseData) : {};
         } catch (error) {
             console.error("Error updating user profile:", error);
             throw error;
