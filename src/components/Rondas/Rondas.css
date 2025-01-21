@@ -1,4 +1,17 @@
-/* Contenedor general */
+/* General */
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Contenedor del calendario */
 .rondas-container {
   display: flex;
   flex-direction: column;
@@ -7,117 +20,164 @@
   padding: 20px;
   background-color: #f5f5f5;
   color: #333;
-  min-height: 100vh; /* Centrado vertical */
+  min-height: 100vh;
+  margin-left: 80px; /* Espacio para el menú */
+  transition: margin-left 0.5s ease;
+}
+
+.menu-open .rondas-container {
+  margin-left: 200px; /* Espacio cuando el menú está ampliado */
 }
 
 /* Título del calendario */
 .calendario-titulo {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
   color: #212121;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Estilo general del calendario */
-.fc {
-  width: 90%;
-  max-width: 1200px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+.calendario-titulo svg {
+  margin-right: 10px;
+  fill: #212121;
 }
 
-/* Títulos de los días (Lun, Mar, etc.) */
-.fc .fc-dayHeader {
-  color: black !important;
-  font-size: 1rem;
+/* Botones de navegación (prev/next) */
+.fc-button {
+  background-color: #f5f5f5; /* Fondo claro predeterminado */
+  color: #212121; /* Texto en negro suave */
   font-weight: bold;
-  text-decoration: underline;
-  text-align: center;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Números de los días */
+/* Hover */
+.fc-button:hover {
+  background-color: #e0e0e0; /* Fondo más oscuro en hover */
+  transform: scale(1.05); /* Efecto de zoom suave */
+  cursor: pointer;
+}
+
+/* Eliminar completamente el borde gris al hacer clic en los botones (focus) */
+.fc-button:focus {
+  outline: none !important; /* Eliminar cualquier borde predeterminado */
+  box-shadow: none !important; /* Quitar sombras adicionales */
+}
+
+/* Estado activo (mientras se presiona el botón) */
+.fc-button:active {
+  background-color: #dcdcdc; /* Color más oscuro temporalmente */
+  transform: scale(0.98); /* Efecto de presión */
+}
+
+/* Cabecera del calendario */
+.fc-header-toolbar {
+  display: flex;
+  flex-direction: column; /* Alinear verticalmente en pantallas pequeñas */
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espaciado entre elementos */
+}
+
+@media (min-width: 768px) {
+  .fc-header-toolbar {
+    flex-direction: row; /* Cambiar a disposición horizontal en pantallas grandes */
+    justify-content: space-between; /* Separar los elementos principales */
+  }
+}
+
+.fc-toolbar-chunk {
+  font-size: 85%; /* Tamaño de letra reducido */
+  font-weight: bold;
+  text-align: center;
+  color: #212121;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo de días en el calendario */
+.fc .fc-dayHeader a {
+  color: black !important;
+  text-decoration: underline !important;
+  pointer-events: none; /* Desactivar el comportamiento de enlace */
+  cursor: default;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
 .fc-daygrid-day-number {
   color: black !important;
+  text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
-  text-decoration: none; /* Sin subrayado */
 }
 
-/* Días anteriores, actuales y futuros */
-.fc-daygrid-day {
-  position: relative;
+.fc-daygrid-day:hover {
+  background-color: transparent !important; /* Hover general eliminado */
 }
 
-.fc-daygrid-day.past-day {
-  background-color: rgba(220, 220, 220, 0.7); /* Más gris para días pasados */
+/* Estilo para rondas */
+.event-indicator-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: flex-start; /* Alinear a la izquierda */
 }
 
-.fc-daygrid-day.today {
-  background-color: rgba(255, 255, 150, 0.5); /* Amarillo suave para el día actual */
+.event-indicator-wrapper:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Resalte ligero */
 }
 
-.fc-daygrid-day.future-day {
-  background-color: rgba(200, 200, 200, 0.7); /* Más oscuro para días futuros */
-}
-
-/* Indicador del evento */
 .event-indicator {
   width: 8px;
   height: 8px;
-  background-color: #21264d; /* Color por defecto */
+  background-color: #21264d;
   border-radius: 50%;
-  margin-left: 5px; /* Alineado a la izquierda */
-  position: relative;
-  overflow: hidden;
+  display: inline-block;
 }
 
-/* Tooltip del evento (módulo) */
-.event-indicator .event-tooltip {
-  display: none;
-  position: absolute;
-  top: -30px;
-  left: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  white-space: nowrap;
-  max-width: 120px; /* Cortar texto largo */
+.event-module {
+  font-size: 0.9rem;
+  color: #333;
+  white-space: nowrap; /* Evitar desbordamiento */
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; /* Añadir puntos suspensivos si excede */
+  max-width: 100px;
 }
 
-/* Mostrar tooltip al pasar el ratón */
-.event-indicator:hover .event-tooltip {
-  display: block;
+/* Días pasados, actuales y futuros */
+.fc-daygrid-day.past-day {
+  background-color: rgba(200, 200, 200, 0.7); /* Más oscuro para pasados */
+}
+
+.fc-daygrid-day.today {
+  background-color: rgba(255, 255, 150, 0.5); /* Amarillo suave para hoy */
+}
+
+.fc-daygrid-day.future-day {
+  background-color: rgba(240, 240, 240, 0.9); /* Suave gris para futuros */
 }
 
 /* Responsivo */
 @media (max-width: 768px) {
-  .fc {
-    font-size: 0.85rem;
-    padding: 10px;
-  }
-
-  .calendario-titulo {
-    font-size: 1.5rem;
-  }
-
-  .fc-daygrid-day-number {
-    font-size: 0.85rem;
+  .event-module {
+    display: none; /* Ocultar texto, mostrar solo el punto */
   }
 
   .event-indicator {
     width: 6px;
     height: 6px;
-    margin-left: 0; /* Centrado en móviles */
   }
 
-  .event-indicator .event-tooltip {
-    display: none; /* Sin tooltip en móviles */
+  .calendario-titulo {
+    font-size: 1.2rem;
   }
 }

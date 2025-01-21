@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -12,6 +12,7 @@ const Rondas = () => {
   const [curso, setCurso] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const calendarRef = useRef(null); // Referencia para el calendario
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,11 +48,11 @@ const Rondas = () => {
       const startDate = new Date(ronda.fechaPresentacion);
       const now = new Date();
 
-      let circleColor = "green"; // Por defecto, futuro
+      let circleColor = "green";
       if (startDate < now) {
-        circleColor = "red"; // Pasado
+        circleColor = "red";
       } else if (startDate.toDateString() === now.toDateString()) {
-        circleColor = "orange"; // Hoy
+        circleColor = "orange";
       }
 
       return {
@@ -59,14 +60,9 @@ const Rondas = () => {
         start: ronda.fechaPresentacion,
         extendedProps: {
           idRonda: ronda.idRonda,
-          hora: startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           modulo: ronda.descripcionModulo,
-          duracion: ronda.duracion,
           circleColor,
         },
-        allDay: false,
-        backgroundColor: "transparent",
-        textColor: "black",
       };
     });
   };
@@ -78,22 +74,57 @@ const Rondas = () => {
     }
   };
 
+  const handlePrevClick = () => {
+    const calendarApi = calendarRef.current.getApi(); // Obtener la API del calendario
+    calendarApi.prev();
+  };
+
+  const handleNextClick = () => {
+    const calendarApi = calendarRef.current.getApi(); // Obtener la API del calendario
+    calendarApi.next();
+  };
+
   return (
     <div className="rondas-container">
-      {curso && <h1 className="calendario-titulo">CALENDARIO - {curso}</h1>}
+      {curso && (
+        <h1 className="calendario-titulo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="feather feather-calendar"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>{" "} {curso}
+        </h1>
+      )}
       {error && <p className="error">{error}</p>}
       {!error && (
         <FullCalendar
+          ref={calendarRef}
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale="es"
-          firstDay={1} /* Comienza el lunes */
+          firstDay={1}
           events={getEvents()}
           eventContent={(eventInfo) => {
             const { modulo, circleColor } = eventInfo.event.extendedProps;
             return (
-              <div className="event-indicator" style={{ backgroundColor: circleColor }}>
-                <span className="event-tooltip">{modulo}</span>
+              <div className="event-indicator-wrapper">
+                <div
+                  className="event-indicator"
+                  style={{ backgroundColor: circleColor }}
+                />
+                <span className="event-module">{modulo}</span>
               </div>
             );
           }}
@@ -103,10 +134,14 @@ const Rondas = () => {
             center: "title",
             right: "",
           }}
+          buttonText={{
+            today: "Hoy", // Cambiar texto de "Today" a "Hoy"
+          }}
           height="auto"
           contentHeight="auto"
           dayMaxEventRows={3}
         />
+
       )}
     </div>
   );
