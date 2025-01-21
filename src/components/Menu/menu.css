@@ -4,9 +4,13 @@
     background-color: #21264d;
     color: white;
     position: fixed;
+    /* Mantener el menú fijo en su lugar */
     align-items: center;
     transition: 1s;
+    z-index: 9999;
+    /* Asegura que esté por encima de todo */
 }
+
 
 .barra-iconos {
     position: absolute;
@@ -40,14 +44,17 @@
 
 .txt-icon-profile {
     position: absolute;
-    left: 70px; 
-    top: 35%; /* Centrar verticalmente el txt */
-    transform: translateY(-50%); /* Corrección de centrado */
+    left: 70px;
+    top: 35%;
+    /* Centrar verticalmente el txt */
+    transform: translateY(-50%);
+    /* Corrección de centrado */
     color: white;
     font-size: 14px;
     display: flex;
     align-items: center;
-    white-space: nowrap; /* Evita que el texto se divida en dos líneas */
+    white-space: nowrap;
+    /* Evita que el texto se divida en dos líneas */
     overflow: hidden;
     text-overflow: ellipsis;
 }
