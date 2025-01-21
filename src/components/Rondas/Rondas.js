@@ -4,16 +4,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
 import Global from "../../utils/Global";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import "./Rondas.css";
-import "../../App.css"
 
 const Rondas = () => {
-  const [rondas, setRondas] = useState([]); // Listado de rondas
-  const [curso, setCurso] = useState(""); // Nombre del curso
-  const [error, setError] = useState(null); // Gestión de errores
-  const navigate = useNavigate(); // Redirección
+  const [rondas, setRondas] = useState([]);
+  const [curso, setCurso] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,21 +20,17 @@ const Rondas = () => {
           throw new Error("Token no encontrado. Inicia sesión nuevamente.");
         }
 
-        // Solicitar información del perfil del usuario
+        // Obtener perfil del usuario
         const perfilResponse = await axios.get(
           `${Global.urlAlumnos}api/Usuarios/Perfil`,
-          {
-            headers: { Authorization: Global.token },
-          }
+          { headers: { Authorization: Global.token } }
         );
         setCurso(perfilResponse.data.usuario.curso);
 
         // Obtener rondas del curso
         const rondasResponse = await axios.get(
           `${Global.urlAlumnos}api/Rondas/RondasCurso`,
-          {
-            headers: { Authorization: Global.token },
-          }
+          { headers: { Authorization: Global.token } }
         );
         setRondas(rondasResponse.data);
       } catch (err) {
@@ -56,10 +50,7 @@ const Rondas = () => {
       let circleColor = "green"; // Por defecto, futuro
       if (startDate < now) {
         circleColor = "red"; // Pasado
-      } else if (
-        startDate.toDateString() === now.toDateString() &&
-        startDate > now
-      ) {
+      } else if (startDate.toDateString() === now.toDateString()) {
         circleColor = "orange"; // Hoy
       }
 
@@ -68,10 +59,7 @@ const Rondas = () => {
         start: ronda.fechaPresentacion,
         extendedProps: {
           idRonda: ronda.idRonda,
-          hora: startDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+          hora: startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           modulo: ronda.descripcionModulo,
           duracion: ronda.duracion,
           circleColor,
@@ -91,31 +79,22 @@ const Rondas = () => {
   };
 
   return (
-    <div className="contenido">
     <div className="rondas-container">
-      {curso && <h1 className="text-center">CALENDARIO - {curso}</h1>}
+      {curso && <h1 className="calendario-titulo">CALENDARIO - {curso}</h1>}
       {error && <p className="error">{error}</p>}
       {!error && (
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale="es"
+          firstDay={1} /* Comienza el lunes */
           events={getEvents()}
           eventContent={(eventInfo) => {
-            const { hora, modulo, duracion, circleColor } =
-              eventInfo.event.extendedProps;
-
+            const { modulo, circleColor } = eventInfo.event.extendedProps;
             return (
-              <StyledRonda circleColor={circleColor}>
-                <div className="circle" />
-                <div className="event-content">
-                  <div className="modulo">{modulo}</div>
-                  <div className="hora-duracion">
-                    <span className="hora">{hora}</span>{" "}
-                    <span className="duracion">{`(${duracion} min)`}</span>
-                  </div>
-                </div>
-              </StyledRonda>
+              <div className="event-indicator" style={{ backgroundColor: circleColor }}>
+                <span className="event-tooltip">{modulo}</span>
+              </div>
             );
           }}
           eventClick={handleEventClick}
@@ -124,51 +103,13 @@ const Rondas = () => {
             center: "title",
             right: "",
           }}
-          height="600px" /* Reducir altura */
-          contentHeight="500px"
-          dayMaxEventRows={3} /* Limitar eventos visibles */
-          dayCellClassNames={(date) =>
-            new Date(date.date) < new Date() ? "past-day" : ""
-          }
+          height="auto"
+          contentHeight="auto"
+          dayMaxEventRows={3}
         />
       )}
-    </div>
     </div>
   );
 };
 
 export default Rondas;
-
-const StyledRonda = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: Arial, sans-serif;
-  font-size: 0.85rem; /* Reducir tamaño general */
-  .circle {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: ${(props) => props.circleColor};
-  }
-  .event-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .modulo {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #000;
-    margin-bottom: 3px;
-  }
-  .hora-duracion {
-    display: flex;
-    gap: 5px;
-    font-size: 0.75rem;
-    color: #666;
-  }
-  .hora {
-    font-weight: bold;
-  }
-`;
