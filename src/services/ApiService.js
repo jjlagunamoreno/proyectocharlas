@@ -89,6 +89,25 @@ const ApiService = {
         }
     },
 
+    getCharlasByRondaEstado: async (idRonda, idEstado) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Charlas/CharlasRondaEstado/${idRonda}/${idEstado}`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al obtener las charlas por estado");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getCharlasByRondaEstado:", error);
+            throw error;
+        }
+    },
+
     getRondaById: async (idRonda) => {
         try {
             const response = await fetch(`${Global.urlAlumnos}api/Rondas/${idRonda}`, {
@@ -104,6 +123,53 @@ const ApiService = {
             return data;
         } catch (error) {
             console.error("Error en getRondaById:", error);
+            throw error;
+        }
+    },
+
+    getVotoAlumnoRonda: async (idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoRonda/${idRonda}`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) return null; // Sin votos para esta ronda
+                throw new Error("Error al obtener el voto del alumno");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getVotoAlumnoRonda:", error);
+            throw error;
+        }
+    },
+
+    votarCharla: async (idCharla, idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify({
+                    idVoto: 0, // ID generado automáticamente por el backend
+                    idCharla,
+                    idUsuario: Global.userId, // Usa el ID del usuario almacenado
+                    idRonda,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al registrar el voto");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en votarCharla:", error);
             throw error;
         }
     },

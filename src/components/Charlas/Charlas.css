@@ -1,3 +1,4 @@
+/* Contenedor principal */
 .charlas-container {
   padding: 20px;
   background-color: #f8f9fa;
@@ -24,7 +25,8 @@
   flex-direction: column;
   gap: 15px;
   align-items: center;
-  margin-top: 40px; /* Espacio para el contador */
+  margin-top: 40px;
+  /* Espacio para el contador */
 }
 
 /* Estilo de cada charla */
@@ -46,9 +48,32 @@
   transform: scale(1.01);
 }
 
+/* Charla Seleccionada en Rondas Cerradas */
+.charla-seleccionada {
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+  background-color: #ffe6e6;
+}
+
+.charla-seleccionada .charla-card {
+  background-color: #fff5f5;
+}
+
+
 /* Efecto para charla votada */
 .charla-card.votada {
   background-color: #e7ffe7;
+}
+
+/* Imagen de la charla */
+.charla-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  background-color: #f0f0f0;
 }
 
 /* Información de la charla */
@@ -67,6 +92,7 @@
   padding: 10px 20px;
   cursor: pointer;
   font-size: 1.2rem;
+  transition: background-color 0.3s;
 }
 
 .vote-btn.active {
@@ -77,10 +103,26 @@
   background-color: #218838;
 }
 
-.charla-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 10px;
-  object-fit: cover;
-  background-color: #f0f0f0;
+/* Responsive diseño para dispositivos móviles */
+@media (max-width: 768px) {
+  .charla-card {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+  }
+
+  .charla-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  .charla-info {
+    margin-left: 0;
+  }
+
+  .vote-btn {
+    margin-top: 15px;
+    width: 100%;
+  }
 }
