@@ -3,12 +3,14 @@ import "./menu.css";
 import logo from "../../assets/images/logoTajamar.png";
 import curso from "../../assets/images/educacion.png";
 import rondas from "../../assets/images/rondas.png";
+import logout from "../../assets/images/logout.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import Global from '../../utils/Global'
 import ApiService from "../../services/ApiService";
 import { ProfileImageContext } from '../../context/ProfileImageContext';
 
 const Menu = () => {
+  const menu = useRef(null);
   const barraMenu = useRef(null);
   const txtIconCurso = useRef(null);
   const txtIconRondas = useRef(null);
@@ -20,6 +22,7 @@ const Menu = () => {
   const txtUserName = useRef(null);
   const txtUserCourse = useRef(null);
   const { profile, setProfile } = useContext(ProfileImageContext);
+  const iconLogout = useRef(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -40,7 +43,27 @@ const Menu = () => {
     navigate('/perfil');
   };
 
+  const logOut = () => {
+    Global.token = "";
+    window.location.reload(true);
+  }
+  
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    if (isOpen) {
+      cerrarMenu();
+    } else {
+      ampliarMenu();
+    }
+  };
+
   const ampliarMenu = () => {
+    if (menu.current) {
+      menu.current.style.width = "200px";
+      menu.current.style.transition = "1s";
+    }
+
     if (barraMenu.current) {
       barraMenu.current.style.width = "150px";
       barraMenu.current.style.transition = "1s";
@@ -58,73 +81,70 @@ const Menu = () => {
       txtIconRondas.current.style.right = "30px";
     }
 
-    if (iconCurso.current) {
-      iconCurso.current.style.backgroundColor = "rgb(24, 59, 105)";
-      iconCurso.current.style.transition = "0.5s";
-    }
-
-    if (iconRondas.current) {
-      iconRondas.current.style.backgroundColor = "rgb(24, 59, 105)";
-      iconRondas.current.style.transition = "0.5s";
-    }
-
     if (txtUserName.current) {
-      txtUserName.current.style.transition = "2s";
+      txtUserName.current.style.transition = "1s";
       txtUserName.current.style.color = "white";
-      txtUserName.current.style.right = "30px";
+      txtUserName.current.style.left = "80px"
       txtUserName.current.style.opacity = 1;
     }
 
-    if (txtUserCourse.current) {
-      txtUserCourse.current.style.transition = "2s";
-      txtUserCourse.current.style.color = "white";
-      txtUserCourse.current.style.right = "30px";
-      txtUserCourse.current.style.opacity = 1;
+    if (iconLogout.current){
+      iconLogout.current.style.transition = "1s";
+      iconLogout.current.style.opacity = "1";
+      iconLogout.current.style.left = "90px";
+      iconLogout.current.style.top = "20px";
     }
+
+    setIsOpen(true);
   };
 
   const cerrarMenu = () => {
+    if (menu.current) {
+      menu.current.style.width = "80px";
+      menu.current.style.transition = "1s";
+    }
+
     if (barraMenu.current) {
       barraMenu.current.style.width = "80px";
       barraMenu.current.style.transition = "1s";
     }
 
     if (txtIconCurso.current) {
-      txtIconCurso.current.style.color = "rgb(35, 82, 144)";
+      txtIconCurso.current.style.color = "#21264d";
       txtIconCurso.current.style.transition = "0.5s";
     }
 
     if (txtIconRondas.current) {
-      txtIconRondas.current.style.color = "rgb(35, 82, 144)";
+      txtIconRondas.current.style.color = "#21264d";
       txtIconRondas.current.style.transition = "0.5s";
     }
 
-    if (iconCurso.current) {
-      iconCurso.current.style.backgroundColor = "rgb(35, 82, 144)";
-      iconCurso.current.style.transition = "0.5s";
-    }
-
-    if (iconRondas.current) {
-      iconRondas.current.style.backgroundColor = "rgb(35, 82, 144)";
-      iconRondas.current.style.transition = "0.5s";
-    }
-
     if (txtUserName.current) {
-      txtUserName.current.style.color = "rgb(35, 82, 144)";
+      txtUserName.current.style.color = "#21264d";
       txtUserName.current.style.transition = "0.5s";
+      txtUserName.current.style.left = "0px" 
       txtUserName.current.style.opacity = 0;
     }
 
-    if (txtUserCourse.current) {
-      txtUserCourse.current.style.color = "rgb(35, 82, 144)";
-      txtUserCourse.current.style.transition = "0.5s";
-      txtUserCourse.current.style.opacity = 0;
+    if (iconLogout.current){
+      iconLogout.current.style.transition = "0.6s";
+      iconLogout.current.style.opacity = "0";
+      iconLogout.current.style.left = "0px";
+      iconLogout.current.style.top = "0px";
     }
+
+    setIsOpen(false);
   };
 
   return (
     <div>
-      <div className="menu" onMouseEnter={ampliarMenu} onMouseLeave={cerrarMenu}>
+      <div className={`menu ${isOpen ? "" : "menu-collapsed"}`} ref={menu}>
+
+      <div className={`box-menu ${isOpen ? "change" : ""}`} onClick={toggleMenu}>
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+      </div>
         <div className="barra-iconos" ref={barraMenu}>
           {/* Logo */}
           <div>
@@ -162,8 +182,12 @@ const Menu = () => {
           </NavLink>
 
           {/* Imagen de Perfil */}
+
+          
           {profile.imagen && (
-            <div style={{ position: 'absolute', bottom: '10px', left: '10px', display: 'flex', alignItems: 'center' }}>
+            
+            <div className="icon-box-profile">
+              <NavLink to="/perfil">
               <img
                 src={profile.imagen}
                 alt="User Profile"
@@ -176,13 +200,18 @@ const Menu = () => {
                   borderRadius: '50%'
                 }}
               />
-              <div style={{ marginLeft: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <h4 className="txt-icon" ref={txtUserName} style={{ margin: 0, transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
+              </NavLink>
+              <div>
+                <h4 className="txt-icon-profile" ref={txtUserName} >
                   {userName}
                 </h4>
-                <p className="txt-icon" ref={txtUserCourse} style={{ margin: 0, fontSize: '12px', transition: '2s', color: 'rgb(35, 82, 144)', opacity: 0 }}>
-                  {userCourse}
-                </p>
+              </div>
+              <div>
+                <img src={logout}
+                 alt="logout" 
+                 className="icon-logout"
+                 onClick={logOut}
+                 ref={iconLogout}/>
               </div>
             </div>
           )}

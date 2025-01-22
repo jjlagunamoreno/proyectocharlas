@@ -1,17 +1,16 @@
 .menu {
     width: 80px;
     height: 100%;
-    background-color: rgb(35, 82, 144);
+    background-color: #21264d;
     color: white;
     position: fixed;
+    /* Mantener el menú fijo en su lugar */
     align-items: center;
     transition: 1s;
+    z-index: 9999;
+    /* Asegura que esté por encima de todo */
 }
 
-.menu:hover {
-    width: 200px;
-    transition: 1s;
-}
 
 .barra-iconos {
     position: absolute;
@@ -23,6 +22,7 @@
     align-items: center;
     display: block;
     flex-direction: column;
+    bottom: 0%;
 }
 
 .logo {
@@ -38,9 +38,27 @@
     position: absolute;
     float: right;
     z-index: 1;
-    color: rgb(35, 82, 144);
-    font-size: 16px;
+    color: #21264d;
+    font-size: 14px;
 }
+
+.txt-icon-profile {
+    position: absolute;
+    left: 70px;
+    top: 35%;
+    /* Centrar verticalmente el txt */
+    transform: translateY(-50%);
+    /* Corrección de centrado */
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    /* Evita que el texto se divida en dos líneas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 .icon-box {
     z-index: -10;
@@ -50,11 +68,21 @@
     height: 40px;
 }
 
-.icon-box:hover {
+.icon-box-profile {
+    z-index: 10;
+    padding-top: 5px;
+    display: flex;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 10px;
+    border-radius: 50px;
+    margin-left: 5px;
+}
+
+.icon-box-profile:hover {
     transition: 0.6s;
-    border-radius: 10%;
-    width: 140px;
-    background-color: rgb(32, 75, 131);
+    background-color: #2d356d;
 }
 
 .icons {
@@ -72,39 +100,51 @@
     margin-left: 2px;
 }
 
-.profile-container {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    display: flex;
-    align-items: center;
-}
-
 .user-profile-image {
-    cursor: pointer;
+    position: absolute;
+    align-items: center;
+    z-index: 2;
     width: 40px;
     height: 40px;
+    left: 5px;
     border-radius: 50%;
 }
 
-.profile-info {
-    margin-left: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.icon-logout {
+    position: relative;
+    height: 16px;
+    opacity: 0;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+    padding-top: 5%;
 }
 
-.profile-info .txt-icon {
-    margin: 0;
-    transition: 2s;
-    color: rgb(35, 82, 144);
+.box-menu {
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: white;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    transform: translate(0, 11px) rotate(-45deg);
+}
+
+.change .bar2 {
     opacity: 0;
 }
 
-.profile-info p {
-    margin: 0;
-    font-size: 12px;
-    transition: 2s;
-    color: rgb(35, 82, 144);
-    opacity: 0;
+.change .bar3 {
+    transform: translate(0, -11px) rotate(45deg);
 }
