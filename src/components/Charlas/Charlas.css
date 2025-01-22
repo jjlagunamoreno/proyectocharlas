@@ -25,7 +25,8 @@
   flex-direction: column;
   gap: 15px;
   align-items: center;
-  margin-top: 40px; /* Espacio para el contador */
+  margin-top: 40px;
+  /* Espacio para el contador */
 }
 
 /* Estilo de cada charla */
@@ -46,6 +47,20 @@
 .charla-card:hover {
   transform: scale(1.01);
 }
+
+/* Charla Seleccionada en Rondas Cerradas */
+.charla-seleccionada {
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+  background-color: #ffe6e6;
+}
+
+.charla-seleccionada .charla-card {
+  background-color: #fff5f5;
+}
+
 
 /* Efecto para charla votada */
 .charla-card.votada {

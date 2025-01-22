@@ -20,6 +20,8 @@ const Charlas = () => {
   const [cerrada, setCerrada] = useState(false);
   const [datosCargados, setDatosCargados] = useState(false); // Control de datos cargados
   const [votoUsuario, setVotoUsuario] = useState(null);
+  const [charlaSeleccionada, setCharlaSeleccionada] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +54,25 @@ const Charlas = () => {
   }, [idRonda]);
 
   useEffect(() => {
+    const fetchCharlaSeleccionada = async () => {
+      if (cerrada) {
+        try {
+          const charlasAceptadas = await ApiService.getCharlasByRondaEstado(idRonda, 2);
+          if (charlasAceptadas.length > 0) {
+            setCharlaSeleccionada(charlasAceptadas[0]);
+          } else {
+            setCharlaSeleccionada(null); // No hay charlas aceptadas
+          }
+        } catch (error) {
+          console.error("Error al obtener la charla seleccionada:", error);
+        }
+      }
+    };
+
+    fetchCharlaSeleccionada();
+  }, [cerrada, idRonda]);
+
+  useEffect(() => {
     const fetchVotoUsuario = async () => {
       try {
         const voto = await ApiService.getVotoAlumnoRonda(idRonda);
@@ -77,9 +98,9 @@ const Charlas = () => {
         setCerrada(true);
         setCelebration(true);
         setMostrarBotones(false);
+        clearInterval(interval);
 
         setTimeout(() => setCelebration(false), 10000); // Detener confeti después de 10 segundos
-        clearInterval(interval);
         return;
       }
 
@@ -93,6 +114,7 @@ const Charlas = () => {
 
     return () => clearInterval(interval);
   }, [fechaPresentacion]);
+
 
   const handleVote = async (idCharla) => {
     const { isConfirmed } = await Swal.fire({
@@ -145,7 +167,7 @@ const Charlas = () => {
       </button>
       <h1 className="text-center mb-4">{modulo}</h1>
       {fechaPresentacion && (
-        <CountdownContainer cerrada={cerrada ? true : undefined}>
+        <CountdownContainer $cerrada={cerrada}>
           <h3>{cerrada ? "CERRADA" : "SE CIERRA EN"}</h3>
           {!cerrada && (
             <Loader>
@@ -161,10 +183,36 @@ const Charlas = () => {
       {!error && charlas.length === 0 && (
         <p className="text-center">No hay charlas disponibles.</p>
       )}
+      {cerrada && charlaSeleccionada && (
+        <div className="charla-seleccionada">
+          <div className="charla-card">
+            <img
+              src={isValidImage(charlaSeleccionada.imagenCharla)
+                ? charlaSeleccionada.imagenCharla
+                : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+              alt="Charla Seleccionada"
+              className="charla-image"
+              onError={(e) => {
+                e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
+              }}
+            />
+            <div className="charla-info">
+              <h3 className="charla-title">{charlaSeleccionada.titulo}</h3>
+              <p className="charla-description">
+                {charlaSeleccionada.descripcion.length > 150
+                  ? `${charlaSeleccionada.descripcion.slice(0, 150)}...`
+                  : charlaSeleccionada.descripcion}
+              </p>
+              <p>
+                <strong>Duración:</strong> {charlaSeleccionada.tiempo} minutos
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="charlas-list">
         {charlas
           .filter((charla) => {
-            // Filtrar solo las charlas cuya ronda no ha pasado
             const now = new Date();
             const fechaCharla = new Date(fechaPresentacion);
             return fechaCharla >= now;
@@ -175,14 +223,15 @@ const Charlas = () => {
               className={`charla-card ${votoUsuario === charla.idCharla ? "votada" : ""}`}
             >
               <img
-                src={isValidImage(charla.imagenCharla) ? charla.imagenCharla : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+                src={isValidImage(charla.imagenCharla)
+                  ? charla.imagenCharla
+                  : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
                 alt="Charla"
                 className="charla-image"
                 onError={(e) => {
                   e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
                 }}
               />
-
               <div className="charla-info">
                 <h3 className="charla-title">{charla.titulo}</h3>
                 <p className="charla-description">
@@ -194,8 +243,6 @@ const Charlas = () => {
                   <strong>Duración:</strong> {charla.tiempo} minutos
                 </p>
               </div>
-
-              {/* Lógica para mostrar el botón o el mensaje */}
               {!votoUsuario && !cerrada ? (
                 <button
                   className="vote-btn"
@@ -214,40 +261,40 @@ const Charlas = () => {
 };
 
 const CountdownContainer = styled.div`
-  background-color: ${(props) => (props.cerrada ? "red" : "rgb(190, 209, 235)")};
-  color: ${(props) => (props.cerrada ? "white" : "black")};
-  padding: 20px;
-  border-radius: 15px;
-  margin: 20px auto;
-  max-width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
+    background-color: ${(props) => (props.$cerrada ? "red" : "rgb(190, 209, 235)")};
+    color: ${(props) => (props.$cerrada ? "white" : "black")};
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  `;
 
 const Loader = styled.div`
-  display: inline-flex;
-  font-size: 30px;
-  font-family: monospace;
-  font-weight: bold;
-  margin: 10px 0;
-`;
+    display: inline-flex;
+    font-size: 30px;
+    font-family: monospace;
+    font-weight: bold;
+    margin: 10px 0;
+  `;
 
 const AddButton = styled.button`
-  display: block;
-  margin: 20px auto;
-  background-color: #28a745;
-  color: white;
-  font-size: 1rem;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase;
+    display: block;
+    margin: 20px auto;
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
 
-  &:hover {
-    background-color: #218838;
-  }
-`;
+    &:hover {
+      background-color: #218838;
+    }
+  `;
 
 export default Charlas;

@@ -89,6 +89,25 @@ const ApiService = {
         }
     },
 
+    getCharlasByRondaEstado: async (idRonda, idEstado) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Charlas/CharlasRondaEstado/${idRonda}/${idEstado}`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al obtener las charlas por estado");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getCharlasByRondaEstado:", error);
+            throw error;
+        }
+    },
+
     getRondaById: async (idRonda) => {
         try {
             const response = await fetch(`${Global.urlAlumnos}api/Rondas/${idRonda}`, {
