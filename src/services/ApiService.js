@@ -108,6 +108,53 @@ const ApiService = {
         }
     },
 
+    getVotoAlumnoRonda: async (idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoRonda/${idRonda}`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) return null; // Sin votos para esta ronda
+                throw new Error("Error al obtener el voto del alumno");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getVotoAlumnoRonda:", error);
+            throw error;
+        }
+    },
+
+    votarCharla: async (idCharla, idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify({
+                    idVoto: 0, // ID generado automáticamente por el backend
+                    idCharla,
+                    idUsuario: Global.userId, // Usa el ID del usuario almacenado
+                    idRonda,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al registrar el voto");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en votarCharla:", error);
+            throw error;
+        }
+    },
+
     // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
     isAuthenticated: () => {
         return !!Global.token;

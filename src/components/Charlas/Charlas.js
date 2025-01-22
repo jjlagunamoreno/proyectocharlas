@@ -4,6 +4,8 @@ import styled from "styled-components";
 import ApiService from "../../services/ApiService";
 import Confetti from "react-confetti";
 import "./Charlas.css";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const Charlas = () => {
   const { idRonda } = useParams();
@@ -17,6 +19,7 @@ const Charlas = () => {
   const [mostrarBotones, setMostrarBotones] = useState(false);
   const [cerrada, setCerrada] = useState(false);
   const [datosCargados, setDatosCargados] = useState(false); // Control de datos cargados
+  const [votoUsuario, setVotoUsuario] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +52,20 @@ const Charlas = () => {
   }, [idRonda]);
 
   useEffect(() => {
+    const fetchVotoUsuario = async () => {
+      try {
+        const voto = await ApiService.getVotoAlumnoRonda(idRonda);
+        setVotoUsuario(voto?.idCharla || null);
+      } catch (err) {
+        console.error("Error al obtener el voto del usuario:", err);
+      }
+    };
+
+    fetchVotoUsuario();
+  }, [idRonda]);
+
+
+  useEffect(() => {
     if (!fechaPresentacion) return;
 
     const interval = setInterval(() => {
@@ -77,10 +94,27 @@ const Charlas = () => {
     return () => clearInterval(interval);
   }, [fechaPresentacion]);
 
-  const handleVote = (idCharla) => {
-    if (celebration || votoSeleccionado || cerrada) return;
-    setVotoSeleccionado(idCharla);
-    alert(`Has votado por la charla: ${idCharla}`);
+  const handleVote = async (idCharla) => {
+    const { isConfirmed } = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Solo puedes votar una vez por charla. ¿Confirmas tu voto?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, votar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (isConfirmed) {
+      try {
+        await ApiService.votarCharla(idCharla, idRonda);
+        setVotoUsuario(idCharla);
+        Swal.fire("Voto registrado", "Tu voto se ha registrado con éxito.", "success");
+      } catch (error) {
+        Swal.fire("Error", "No se pudo registrar tu voto. Inténtalo de nuevo.", "error");
+      }
+    }
   };
 
   const goBack = () => {
@@ -128,43 +162,52 @@ const Charlas = () => {
         <p className="text-center">No hay charlas disponibles.</p>
       )}
       <div className="charlas-list">
-        {charlas.map((charla) => (
-          <div
-            key={charla.idCharla}
-            className={`charla-card ${votoSeleccionado === charla.idCharla ? "votada" : ""}`}
-          >
-            <img
-              src={isValidImage(charla.imagenCharla) ? charla.imagenCharla : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
-              alt="Charla"
-              className="charla-image"
-              onError={(e) => {
-                e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
-              }}
-            />
+        {charlas
+          .filter((charla) => {
+            // Filtrar solo las charlas cuya ronda no ha pasado
+            const now = new Date();
+            const fechaCharla = new Date(fechaPresentacion);
+            return fechaCharla >= now;
+          })
+          .map((charla) => (
+            <div
+              key={charla.idCharla}
+              className={`charla-card ${votoUsuario === charla.idCharla ? "votada" : ""}`}
+            >
+              <img
+                src={isValidImage(charla.imagenCharla) ? charla.imagenCharla : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+                alt="Charla"
+                className="charla-image"
+                onError={(e) => {
+                  e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
+                }}
+              />
 
-            <div className="charla-info">
-              <h3 className="charla-title">{charla.titulo}</h3>
-              <p className="charla-description">
-                {charla.descripcion.length > 150
-                  ? `${charla.descripcion.slice(0, 150)}...`
-                  : charla.descripcion}
-              </p>
-              <p>
-                <strong>Duración:</strong> {charla.tiempo} minutos
-              </p>
+              <div className="charla-info">
+                <h3 className="charla-title">{charla.titulo}</h3>
+                <p className="charla-description">
+                  {charla.descripcion.length > 150
+                    ? `${charla.descripcion.slice(0, 150)}...`
+                    : charla.descripcion}
+                </p>
+                <p>
+                  <strong>Duración:</strong> {charla.tiempo} minutos
+                </p>
+              </div>
+
+              {/* Lógica para mostrar el botón o el mensaje */}
+              {!votoUsuario && !cerrada ? (
+                <button
+                  className="vote-btn"
+                  onClick={() => handleVote(charla.idCharla)}
+                >
+                  👍
+                </button>
+              ) : votoUsuario === charla.idCharla ? (
+                <span className="voted-msg">Charla Votada</span>
+              ) : null}
             </div>
-            {mostrarBotones && !votoSeleccionado && !cerrada ? (
-              <button
-                className={`vote-btn ${votoSeleccionado === charla.idCharla ? "active" : ""}`}
-                onClick={() => handleVote(charla.idCharla)}
-              >
-                👍
-              </button>
-            ) : votoSeleccionado === charla.idCharla ? (
-              <span className="voted-msg">Votaste aquí</span>
-            ) : null}
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
