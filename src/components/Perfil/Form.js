@@ -3,33 +3,21 @@ import { HiOutlineMail } from "react-icons/hi";
 import ApiService from "../../services/ApiService";
 import "./Form.css";
 import { ProfileImageContext } from '../../context/ProfileImageContext';
+import { PasswordContext } from '../../context/PasswordContext';
 
 const Form = () => {
   const { profile, setProfile } = useContext(ProfileImageContext);
+  const { setCurrentPassword: setGlobalCurrentPassword, currentPassword } = useContext(PasswordContext);
   const [localProfile, setLocalProfile] = useState({ ...profile });
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [localCurrentPassword, setLocalCurrentPassword] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profileData = await ApiService.getUserProfile();
-        setProfile({
-          idUsuario: profileData.usuario.idUsuario,
-          nombre: profileData.usuario.nombre,
-          apellidos: profileData.usuario.apellidos,
-          email: profileData.usuario.email,
-          imagen: profileData.usuario.imagen,
-          idRole: profileData.usuario.idRole,
-        });
-        setLocalProfile({
-          idUsuario: profileData.usuario.idUsuario,
-          nombre: profileData.usuario.nombre,
-          apellidos: profileData.usuario.apellidos,
-          email: profileData.usuario.email,
-          imagen: profileData.usuario.imagen,
-          idRole: profileData.usuario.idRole,
-        });
+        setProfile(profileData.usuario);
+        setLocalProfile(profileData.usuario);
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
@@ -44,7 +32,8 @@ const Form = () => {
   };
 
   const handlePasswordChange = (e) => {
-    setCurrentPassword(e.target.value);
+    setLocalCurrentPassword(e.target.value);
+    setGlobalCurrentPassword(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +43,7 @@ const Form = () => {
       return;
     }
 
-    if (!currentPassword) {
+    if (!localCurrentPassword) {
       setError("Por favor, introduce tu contraseña actual.");
       return;
     }
@@ -63,37 +52,38 @@ const Form = () => {
       // Verificar la contraseña actual
       const loginResponse = await ApiService.login({
         userName: localProfile.email,
-        password: currentPassword,
+        password: localCurrentPassword,
       });
 
-      console.log("loginResponse:", loginResponse); // Imprimir el loginResponse en la consola
-
-      if (loginResponse.token) {
-        // Actualizar el perfil del usuario
-        const updatedProfile = {
-          idUsuario: localProfile.idUsuario,
-          nombre: localProfile.nombre,
-          apellidos: localProfile.apellidos,
-          email: localProfile.email,
-          estadoUsuario: true,
-          imagen: localProfile.imagen,
-          password: currentPassword, // Usar la contraseña actual
-          idRole: localProfile.idRole,
-        };
-
-        console.log("JSON enviado:", JSON.stringify(updatedProfile)); // Imprimir el JSON en la consola
-
-        const updateResponse = await ApiService.updateUserProfile(updatedProfile);
-        console.log("updateResponse:", updateResponse); // Imprimir la respuesta de la actualización
-
-        // Actualizar el contexto global del perfil
-        setProfile(updatedProfile);
-
-        alert("Perfil actualizado con éxito.");
-        setError(""); // Limpiar el mensaje de error
-      } else {
+      if (!loginResponse.token) {
         setError("Contraseña incorrecta.");
+        return;
       }
+
+      // Actualizar el perfil del usuario
+      const updatedProfile = {
+        ...localProfile,
+        imagen: profile.imagen, // Usar la nueva URL de la imagen
+        password: localCurrentPassword, // Usar la contraseña actual
+      };
+
+      console.log("JSON enviado:", JSON.stringify(updatedProfile)); // Imprimir el JSON en la consola
+
+      const updateResponse = await ApiService.updateUserProfile(updatedProfile);
+      console.log("updateResponse:", updateResponse); // Imprimir la respuesta de la actualización
+
+      // Refrescar el token después de actualizar el perfil
+      const newLoginResponse = await ApiService.login({
+        userName: localProfile.email,
+        password: localCurrentPassword,
+      });
+
+      // Actualizar el contexto global del perfil con los datos correctos
+      const refreshedProfileData = await ApiService.getUserProfile();
+      setProfile(refreshedProfileData.usuario);
+
+      alert("Perfil actualizado con éxito.");
+      setError(""); // Limpiar el mensaje de error
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("No se pudo actualizar el perfil.");
@@ -147,7 +137,7 @@ const Form = () => {
             <input
               type="password"
               name="currentPassword"
-              value={currentPassword}
+              value={localCurrentPassword}
               onChange={handlePasswordChange}
               className="Form_box_input_userName"
             />

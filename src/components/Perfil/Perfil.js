@@ -5,12 +5,14 @@ import FileService from '../../services/FileService';
 import Form from './Form';
 import './Perfil.css'; // Importar el archivo de estilos
 import { ProfileImageContext } from '../../context/ProfileImageContext';
+import { PasswordContext } from '../../context/PasswordContext';
 
 export default function Perfil() {
   const [profile, setProfile] = useState(null);
   const [charlas, setCharlas] = useState([]);
   const [fileUrl, setFileUrl] = useState(null);
   const { profile: globalProfile, setProfile: setGlobalProfile } = useContext(ProfileImageContext);
+  const { currentPassword } = useContext(PasswordContext);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -37,15 +39,29 @@ export default function Perfil() {
         new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
       );
       try {
-        await FileService.uploadUserImage(profile.idUsuario, file.name, base64);
-        const newFileUrl = URL.createObjectURL(file);
+        const response = await FileService.uploadUserImage(profile.idUsuario, file.name, base64);
+        const newFileUrl = response.urlFile; // Use the new URL from the response
         setFileUrl(newFileUrl);
+        setProfile(prevProfile => ({ ...prevProfile, imagen: newFileUrl }));
         setGlobalProfile(prevProfile => ({ ...prevProfile, imagen: newFileUrl }));
+
+        // Refrescar el token después de cambiar la imagen del perfil
+        const newLoginResponse = await ApiService.login({
+          userName: profile.email,
+          password: currentPassword,
+        });
+
+        // Actualizar el contexto global del perfil con los datos correctos
+        const refreshedProfileData = await ApiService.getUserProfile();
+        setProfile(refreshedProfileData.usuario);
+        setGlobalProfile(refreshedProfileData.usuario);
+
+        alert("Imagen de perfil actualizada con éxito.");
       } catch (error) {
         console.error('Error uploading file:', error);
       }
     };
-  }, [profile, setGlobalProfile]);
+  }, [profile, setGlobalProfile, currentPassword]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

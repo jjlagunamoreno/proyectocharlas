@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import "./menu.css";
 import logo from "../../assets/images/logoTajamar.png";
 import curso from "../../assets/images/educacion.png";
@@ -6,6 +6,7 @@ import rondas from "../../assets/images/rondas.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import Global from '../../utils/Global'
 import ApiService from "../../services/ApiService";
+import { ProfileImageContext } from '../../context/ProfileImageContext';
 
 const Menu = () => {
   const barraMenu = useRef(null);
@@ -13,27 +14,27 @@ const Menu = () => {
   const txtIconRondas = useRef(null);
   const iconCurso = useRef(null);
   const iconRondas = useRef(null);
-  const [userImage, setUserImage] = useState('');
   const [userName, setUserName] = useState('');
   const [userCourse, setUserCourse] = useState('');
   const navigate = useNavigate();
   const txtUserName = useRef(null);
   const txtUserCourse = useRef(null);
+  const { profile, setProfile } = useContext(ProfileImageContext);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const profileData = await ApiService.getUserProfile();
-        setUserImage(profileData.usuario.imagen);
         setUserName(profileData.usuario.nombre);
         setUserCourse(profileData.usuario.curso);
+        setProfile(profileData.usuario);
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
     };
 
     fetchUserProfile();
-  }, []);
+  }, [setProfile]);
 
   const handleProfileClick = () => {
     navigate('/perfil');
@@ -161,10 +162,10 @@ const Menu = () => {
           </NavLink>
 
           {/* Imagen de Perfil */}
-          {userImage && (
+          {profile.imagen && (
             <div style={{ position: 'absolute', bottom: '10px', left: '10px', display: 'flex', alignItems: 'center' }}>
               <img
-                src={userImage}
+                src={profile.imagen}
                 alt="User Profile"
                 className="user-profile-image"
                 onClick={handleProfileClick}

@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "./login.css";
 import logo from "../../assets/images/logoTajamar.png";
 import flecha from "../../assets/images/right-arrow-alt-regular-24.png";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import Global from "../../utils/Global";
+import { PasswordContext } from '../../context/PasswordContext';
 
 const Login = ({ setIsAuthenticated }) => {
   // ESTADO PARA LOS DATOS DEL LOGIN
@@ -32,6 +33,8 @@ const Login = ({ setIsAuthenticated }) => {
   const loginBtnRef = useRef(null);
   const registerBtnRef = useRef(null);
 
+  const { setCurrentPassword } = useContext(PasswordContext);
+
   // FUNCIÓN PARA MANEJAR CAMBIOS EN EL FORMULARIO DE LOGIN
   const handleChangeLogin = (e) => {
     const { name, value } = e.target;
@@ -56,6 +59,7 @@ const Login = ({ setIsAuthenticated }) => {
         // GUARDAMOS EL ID DEL ROL DEL USUARIO QUE ACCEDE
         Global.role = role;
         setIsAuthenticated(true); // ACTUALIZAR EL ESTADO DE AUTENTICACIÓN
+        setCurrentPassword(credentials.password); // Store the password in the context
         navigate("/"); // REDIRIGIR AL HOME
       }
     } catch (err) {
