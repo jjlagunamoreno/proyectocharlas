@@ -137,7 +137,11 @@ const Charlas = () => {
               src={isValidImage(charla.imagenCharla) ? charla.imagenCharla : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
               alt="Charla"
               className="charla-image"
+              onError={(e) => {
+                e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
+              }}
             />
+
             <div className="charla-info">
               <h3 className="charla-title">{charla.titulo}</h3>
               <p className="charla-description">
