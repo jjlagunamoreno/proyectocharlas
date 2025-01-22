@@ -93,6 +93,16 @@ const Charlas = () => {
     }
   };
 
+  const isValidImage = (url) => {
+    if (!url) return false; // Si no hay URL, no es válida.
+    const image = new Image();
+    image.src = url;
+
+    // Validar si la URL es válida comprobando el formato MIME y errores de carga
+    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url);
+    return isImage;
+  };
+
   return (
     <div className="charlas-container">
       {celebration && <Confetti />}
@@ -101,7 +111,7 @@ const Charlas = () => {
       </button>
       <h1 className="text-center mb-4">{modulo}</h1>
       {fechaPresentacion && (
-        <CountdownContainer cerrada={cerrada}>
+        <CountdownContainer cerrada={cerrada ? true : undefined}>
           <h3>{cerrada ? "CERRADA" : "SE CIERRA EN"}</h3>
           {!cerrada && (
             <Loader>
@@ -124,7 +134,7 @@ const Charlas = () => {
             className={`charla-card ${votoSeleccionado === charla.idCharla ? "votada" : ""}`}
           >
             <img
-              src={charla.imagenCharla || "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+              src={isValidImage(charla.imagenCharla) ? charla.imagenCharla : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
               alt="Charla"
               className="charla-image"
             />
