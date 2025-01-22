@@ -17,20 +17,19 @@ const Menu = () => {
   const iconCurso = useRef(null);
   const iconRondas = useRef(null);
   const [userName, setUserName] = useState('');
-  const [userCourse, setUserCourse] = useState('');
   const navigate = useNavigate();
   const txtUserName = useRef(null);
-  const txtUserCourse = useRef(null);
   const { profile, setProfile } = useContext(ProfileImageContext);
   const iconLogout = useRef(null);
+  const [profileImage, setProfileImage] = useState(profile.imagen); // Estado adicional
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const profileData = await ApiService.getUserProfile();
         setUserName(profileData.usuario.nombre);
-        setUserCourse(profileData.usuario.curso);
         setProfile(profileData.usuario);
+        setProfileImage(profileData.usuario.imagen); // Actualizar el estado adicional
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
@@ -38,6 +37,10 @@ const Menu = () => {
 
     fetchUserProfile();
   }, [setProfile]);
+
+  useEffect(() => {
+    setProfileImage(profile.imagen); // Actualizar el estado adicional cuando cambie el contexto
+  }, [profile.imagen]);
 
   const handleProfileClick = () => {
     navigate('/perfil');
@@ -184,12 +187,12 @@ const Menu = () => {
           {/* Imagen de Perfil */}
 
           
-          {profile.imagen && (
+          {profileImage && (
             
             <div className="icon-box-profile">
               <NavLink to="/perfil">
               <img
-                src={profile.imagen}
+                src={profileImage}
                 alt="User Profile"
                 className="user-profile-image"
                 onClick={handleProfileClick}

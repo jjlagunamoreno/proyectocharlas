@@ -34,7 +34,6 @@ const Login = ({ setIsAuthenticated }) => {
   const registerBtnRef = useRef(null);
 
   const { setCurrentPassword } = useContext(PasswordContext);
-
   // FUNCIÓN PARA MANEJAR CAMBIOS EN EL FORMULARIO DE LOGIN
   const handleChangeLogin = (e) => {
     const { name, value } = e.target;
@@ -60,6 +59,7 @@ const Login = ({ setIsAuthenticated }) => {
         Global.role = role;
         setIsAuthenticated(true); // ACTUALIZAR EL ESTADO DE AUTENTICACIÓN
         setCurrentPassword(credentials.password); // Store the password in the context
+
         navigate("/"); // REDIRIGIR AL HOME
       }
     } catch (err) {

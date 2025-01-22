@@ -55,13 +55,17 @@ export default function Perfil() {
         const refreshedProfileData = await ApiService.getUserProfile();
         setProfile(refreshedProfileData.usuario);
         setGlobalProfile(refreshedProfileData.usuario);
-
+        
         alert("Imagen de perfil actualizada con éxito.");
       } catch (error) {
         console.error('Error uploading file:', error);
       }
     };
   }, [profile, setGlobalProfile, currentPassword]);
+  
+  useEffect(() => {
+    console.log('File URL updated:', fileUrl);
+  }, [fileUrl]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
