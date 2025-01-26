@@ -113,7 +113,8 @@
        position: sticky;
        top: 0;
        left: 0;
-       background-color: rgb(190, 209, 235);
+       background-color: #454d8f;
+       color: white;
        text-transform: capitalize;
    }
    
@@ -203,7 +204,7 @@
 
 .filter {
     text-align: center;
-    background-color: #6fcaea;
+    background-color: #7b84c6;
     padding: 2px;
     border-radius: 10px;
     margin: 10px;
@@ -213,9 +214,10 @@
 
 .filter:hover {
     
-    background-color: #58a3be;
+    background-color: #545a8d;
 }
-
+z
 .filter h4{
     margin: 0px;
+    margin-bottom: 0px;
 }

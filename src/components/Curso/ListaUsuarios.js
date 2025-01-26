@@ -1,40 +1,52 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { useState } from 'react'
 import Global from "../../utils/Global";
 import './curso.css'
 import '../../App.css'
+import ApiService from '../../services/ApiService';
 import defaultImage from "../../assets/images/nopfp.png";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default class ListaUsuarios extends Component {
+  
   state = {
     usuarios: [], // Contendrá todos los usuarios, tanto activos como inactivos.
     usuariosFiltrados: []
   };
 
   // Función para cargar los usuarios desde la API
-  loadUsuarios = () => {
-    var token = Global.token;
-    let request = "api/Profesor/AlumnosCursoProfesor";
-    let url = Global.urlAlumnos + request;
+  loadUsuarios = async (estado) => {
+    try {
+      var token = Global.token;
+      let request = "api/Profesor/AlumnosCursoProfesor";
+      let url = Global.urlAlumnos + request;
 
-    axios.get(url, {
-      headers: {
-        'Authorization': token,
-      },
-    }).then(response => {
+      const response = await axios.get(url, {
+        headers: {
+          'Authorization': token,
+        },
+      });
+
       // Filtrar los usuarios activos e inactivos
       const usuarios = response.data[0].alumnos;
+      const usuariosFiltrados = usuarios.filter(usuario => 
+        usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
+      );
+
       this.setState({
         usuarios, // Guardamos todos los usuarios en el estado
+        usuariosFiltrados
       });
-    }).catch(error => {
+
+    } catch (error) {
       console.error("Error al cargar los usuarios", error);
-    });
+    }
   };
 
+  // Función para cambiar los usuarios filtrados por estado
   changeUsers = (estado) => {
-    console.log(estado);
-    
     const { usuarios } = this.state;
     const usuariosFiltrados = usuarios.filter(usuario => 
       usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
@@ -44,20 +56,45 @@ export default class ListaUsuarios extends Component {
     });
   };
 
+  // Se llama cuando el componente se monta
   componentDidMount = () => {
-    this.loadUsuarios()
-  } 
+    this.loadUsuarios(true);
+  }
 
-  isValidImage = (url) => {
-    if (!url) return false; // Si no hay URL, no es válida.
-    const image = new Image();
-    image.src = url;
- 
-    // Validar si la URL es válida comprobando el formato MIME y errores de carga
-    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url);
-    return isImage;
+  // Función que muestra el Swal y maneja la lógica
+  showSwal = async (idUsuario, estado) => {
+    const result = await withReactContent(Swal).fire({
+      title: "Cambiar el estado del usuario",
+      text: "¿Estas seguro de cambiar el estado del usuario?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+      cancelButtonText: "No"
+    });
+
+    if (result.isConfirmed) {
+      // Primero actualizamos el estado del usuario
+      await ApiService.updateEstadoUsuario(idUsuario, estado);
+
+      // Luego recargamos los usuarios
+      await this.loadUsuarios();
+
+      Swal.fire({
+        title: "Actualizado!",
+        text: "El estado ha sido actualizado.",
+        icon: "success"
+      });
+    }
   };
 
+  verificarImagen = (url) => {
+    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+      return url;
+    }
+    return defaultImage; // Reemplaza con la ruta de tu imagen por defecto
+  };
 
   render() {
     return (
@@ -72,44 +109,42 @@ export default class ListaUsuarios extends Component {
           </div>
         </div>
         <div className="table__body">
-        <table>
-          <thead>
-            <tr>
-              <th> </th>
-              <th>Alumno</th>
-              <th>Correo</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.state.usuariosFiltrados.map((usuario, index) => {
-                
-                return(
-                  <tr key={index}>
-                    <td><img src={this.isValidImage(usuario.alumno.imagen) ? usuario.alumno.imagen : defaultImage} alt='Error en la Imagen'></img></td>
-                    <td>{usuario.alumno.usuario}</td>
-                    <td>{usuario.alumno.email}</td>
-                    {
-                      usuario.alumno.estadoUsuario === true ? (
-                        <td>
-                        <p class="status active">Activo</p>
-                        </td>
-                      ) : (
-                        <td>
-                        <p class="status inactive">Inactivo</p>
-                        </td>
-                      )
-                    }
-                  </tr>
-                )
-              })
-            }
-            
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Alumno</th>
+                <th>Correo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.state.usuariosFiltrados.map((usuario, index) => {
+                  return(
+                    <tr key={index}>
+                      <td><img src={this.verificarImagen(usuario.alumno.imagen)} alt='Error en la Imagen'></img></td>
+                      <td>{usuario.alumno.usuario}</td>
+                      <td>{usuario.alumno.email}</td>
+                      {
+                        usuario.alumno.estadoUsuario === true ? (
+                          <td >
+                            <p className="status active" onClick={() => this.showSwal(usuario.alumno.idUsuario, false)}>Activo</p>
+                          </td>
+                        ) : (
+                          <td>
+                            <p className="status inactive" onClick={() => this.showSwal(usuario.alumno.idUsuario, true)}>Inactivo</p>
+                          </td>
+                        )
+                      }
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-      </div>
-  )
-}
+    );
+  }
 }

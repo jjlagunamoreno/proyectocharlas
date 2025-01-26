@@ -108,6 +108,22 @@ const ApiService = {
         }
     },
 
+    updateEstadoUsuario: async (idUsuario, estado) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/UpdateEstadoUsuario/${idUsuario}/${estado}`, {
+                method: "PUT",
+                headers: { Authorization: Global.token },
+            });
+            
+            if (!response.ok) {
+                throw new Error("Error al cambiar el estado del usuario");
+            }
+        } catch (error) {
+            console.error("Error en updateEstadoUsuario:", error);
+            throw error;
+        }
+    },
+
     // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
     isAuthenticated: () => {
         return !!Global.token;
