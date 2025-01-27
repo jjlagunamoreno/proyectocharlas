@@ -57,6 +57,7 @@
     /* Evita que el texto se divida en dos líneas */
     overflow: hidden;
     text-overflow: ellipsis;
+    opacity: 0;
 }
 
 

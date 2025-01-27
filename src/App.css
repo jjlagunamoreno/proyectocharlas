@@ -40,6 +40,10 @@
 .contenido{
   z-index: -20;
   position: absolute;
-  width: 95%;
+  width: 94%;
   right: 0;
+}
+
+.contenido h1 {
+  text-align: center;
 }

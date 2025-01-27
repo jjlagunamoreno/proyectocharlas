@@ -6,6 +6,7 @@ import './curso.css'
 import '../../App.css'
 import ApiService from '../../services/ApiService';
 import defaultImage from "../../assets/images/nopfp.png";
+import advertencia from "../../assets/images/senal-de-advertencia.png"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -13,14 +14,15 @@ export default class ListaUsuarios extends Component {
   
   state = {
     usuarios: [], // Contendrá todos los usuarios, tanto activos como inactivos.
-    usuariosFiltrados: []
+    usuariosFiltrados: [],
+    nombreCurso: ''
   };
 
   // Función para cargar los usuarios desde la API
   loadUsuarios = async (estado) => {
     try {
       var token = Global.token;
-      let request = "api/Profesor/AlumnosCursoProfesor";
+      let request = "api/Profesor/AlumnosCursoActivoProfesor";
       let url = Global.urlAlumnos + request;
 
       const response = await axios.get(url, {
@@ -30,14 +32,17 @@ export default class ListaUsuarios extends Component {
       });
 
       // Filtrar los usuarios activos e inactivos
+      console.log(response.data)
       const usuarios = response.data[0].alumnos;
       const usuariosFiltrados = usuarios.filter(usuario => 
         usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
       );
+      const nombreCurso = response.data[0].curso.nombre;
 
       this.setState({
         usuarios, // Guardamos todos los usuarios en el estado
-        usuariosFiltrados
+        usuariosFiltrados,
+        nombreCurso
       });
 
     } catch (error) {
@@ -89,6 +94,14 @@ export default class ListaUsuarios extends Component {
     }
   };
 
+  showWarning = async () => {
+    Swal.fire({
+      title: "Atención!!",
+      text: "Para cambiar el estado de un alumno haz click en el botón situado a la derecha de un alumno.",
+      icon: "warning"
+    });
+  }
+
   verificarImagen = (url) => {
     if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
       return url;
@@ -99,13 +112,16 @@ export default class ListaUsuarios extends Component {
   render() {
     return (
       <div className='contenido'>
-        <h1>Desarrollo FullStack 2024/2025</h1>
+        <h1>{this.state.nombreCurso}</h1>
         <div className='filters-box'>
           <div className='filter' onClick={() => this.changeUsers(true)}>
             <h4>Activos</h4>
           </div>
           <div className='filter' onClick={() => this.changeUsers(false)}>
             <h4>Inactivos</h4>
+          </div>
+          <div className='filter-warning' onClick={() => this.showWarning()}>
+            <img src={advertencia}/>
           </div>
         </div>
         <div className="table__body">

@@ -212,7 +212,22 @@
     cursor: pointer;
 }
 
-.filter:hover {
+.filter-warning{
+    text-align: center;
+    background-color: #7b84c6;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.filter-warning img{
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    width: 40px;
+}
+
+.filter:hover, .filter-warning:hover {
     
     background-color: #545a8d;
 }
