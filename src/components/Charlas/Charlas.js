@@ -6,6 +6,7 @@ import Confetti from "react-confetti";
 import "./Charlas.css";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { Link } from "react-router-dom";
 
 const Charlas = () => {
   const { idRonda } = useParams();
@@ -57,9 +58,9 @@ const Charlas = () => {
     const fetchCharlaSeleccionada = async () => {
       if (cerrada) {
         try {
-          const charlasAceptadas = await ApiService.getCharlasByRondaEstado(idRonda, 2);
+          const charlasAceptadas = await ApiService.getCharlasByRondaEstado(idRonda, 2); // 2 = Charlas Aceptadas
           if (charlasAceptadas.length > 0) {
-            setCharlaSeleccionada(charlasAceptadas[0]);
+            setCharlaSeleccionada(charlasAceptadas[0]); // Toma la primera charla aceptada
           } else {
             setCharlaSeleccionada(null); // No hay charlas aceptadas
           }
@@ -183,32 +184,51 @@ const Charlas = () => {
       {!error && charlas.length === 0 && (
         <p className="text-center">No hay charlas disponibles.</p>
       )}
-      {cerrada && charlaSeleccionada && (
-        <div className="charla-seleccionada">
-          <div className="charla-card">
-            <img
-              src={isValidImage(charlaSeleccionada.imagenCharla)
-                ? charlaSeleccionada.imagenCharla
-                : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
-              alt="Charla Seleccionada"
-              className="charla-image"
-              onError={(e) => {
-                e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
-              }}
-            />
-            <div className="charla-info">
-              <h3 className="charla-title">{charlaSeleccionada.titulo}</h3>
-              <p className="charla-description">
-                {charlaSeleccionada.descripcion.length > 150
-                  ? `${charlaSeleccionada.descripcion.slice(0, 150)}...`
-                  : charlaSeleccionada.descripcion}
-              </p>
-              <p>
-                <strong>Duración:</strong> {charlaSeleccionada.tiempo} minutos
-              </p>
+      {cerrada && (
+        <>
+          {charlaSeleccionada ? (
+            // Mostrar la charla seleccionada
+            <div className="charla-seleccionada">
+              <div className="charla-card">
+                <img
+                  src={isValidImage(charlaSeleccionada.imagenCharla)
+                    ? charlaSeleccionada.imagenCharla
+                    : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+                  alt="Charla Seleccionada"
+                  className="charla-image"
+                  onError={(e) => {
+                    e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
+                  }}
+                />
+                <div className="charla-info">
+                  <h3 className="charla-title">{charlaSeleccionada.titulo}</h3>
+                  <p className="charla-description">
+                    {charlaSeleccionada.descripcion.length > 150
+                      ? `${charlaSeleccionada.descripcion.slice(0, 150)}...`
+                      : charlaSeleccionada.descripcion}
+                  </p>
+                  <p>
+                    <strong>Duración:</strong> {charlaSeleccionada.tiempo} minutos
+                  </p>
+                  <p>
+                    <strong>Propuesta por:</strong> {charlaSeleccionada.usuario}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            // Casos en los que no hay charla seleccionada
+            <>
+              {charlas.length === 0 ? (
+                <p className="text-center">No hay charlas disponibles.</p>
+              ) : (
+                <p className="text-center">
+                  No hay una charla favorita o hay un empate entre varias charlas.
+                </p>
+              )}
+            </>
+          )}
+        </>
       )}
       <div className="charlas-list">
         {charlas
@@ -222,27 +242,30 @@ const Charlas = () => {
               key={charla.idCharla}
               className={`charla-card ${votoUsuario === charla.idCharla ? "votada" : ""}`}
             >
-              <img
-                src={isValidImage(charla.imagenCharla)
-                  ? charla.imagenCharla
-                  : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
-                alt="Charla"
-                className="charla-image"
-                onError={(e) => {
-                  e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
-                }}
-              />
-              <div className="charla-info">
-                <h3 className="charla-title">{charla.titulo}</h3>
-                <p className="charla-description">
-                  {charla.descripcion.length > 150
-                    ? `${charla.descripcion.slice(0, 150)}...`
-                    : charla.descripcion}
-                </p>
-                <p>
-                  <strong>Duración:</strong> {charla.tiempo} minutos
-                </p>
-              </div>
+              <Link to={`/detallescharla/${charla.idCharla}`} className="text-decoration-none">
+
+                <img
+                  src={isValidImage(charla.imagenCharla)
+                    ? charla.imagenCharla
+                    : "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg"}
+                  alt="Charla"
+                  className="charla-image"
+                  onError={(e) => {
+                    e.target.src = "https://siepcantabria.org/wp-content/uploads/2018/03/reunion.jpg";
+                  }}
+                />
+                <div className="charla-info">
+                  <h3 className="charla-title">{charla.titulo}</h3>
+                  <p className="charla-description">
+                    {charla.descripcion.length > 150
+                      ? `${charla.descripcion.slice(0, 150)}...`
+                      : charla.descripcion}
+                  </p>
+                  <p>
+                    <strong>Duración:</strong> {charla.tiempo} minutos
+                  </p>
+                </div>
+              </Link>
               {!votoUsuario && !cerrada ? (
                 <button
                   className="vote-btn"

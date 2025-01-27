@@ -1,0 +1,103 @@
+/* Contenedor principal */
+.detalles-charla-container {
+    padding: 0 20px;
+    /* Ajustado para eliminar margen superior */
+    max-width: 800px;
+    margin: 0 auto;
+    /* Centrado sin espaciado adicional */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+/* Botón de regreso */
+.detalles-charla-container .btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.detalles-charla-container .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Recursos */
+.detalles-charla-container .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.detalles-charla-container .list-group-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.detalles-charla-container .list-group-item .btn {
+    font-size: 14px;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+.detalles-charla-container .list-group-item .btn-primary {
+    background-color: #28a745;
+    border: none;
+}
+
+.detalles-charla-container .list-group-item .btn-primary:hover {
+    background-color: #218838;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .detalles-charla-container {
+        padding: 10px;
+    }
+
+    .detalles-charla-container .list-group-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detalles-charla-container .list-group-item .btn {
+        margin: 10px 0 0 0;
+    }
+}
+
+.comentario-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.comentario-actions .btn-link {
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.comentario-actions .btn-link.text-primary:hover {
+    color: #0056b3;
+}
+
+.comentario-actions .btn-link.text-danger:hover {
+    color: #c82333;
+}

@@ -31,6 +31,8 @@
 
 /* Estilo de cada charla */
 .charla-card {
+  margin: 0 auto;
+  align-items: center;
   width: 90%;
   max-width: 800px;
   display: flex;

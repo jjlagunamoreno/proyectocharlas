@@ -174,6 +174,91 @@ const ApiService = {
         }
     },
 
+    // DETALLESCHARLAS
+    getCharlaById: async (idCharla) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Charlas/${idCharla}`, {
+                headers: { Authorization: Global.token },
+            });
+
+            if (!response.ok) {
+                throw new Error("Charla no encontrada");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getCharlaById:", error);
+            throw error;
+        }
+    },
+
+    // COMPONENTE Comentarios
+    createComentario: async (comentario) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Comentarios`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify(comentario),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al crear el comentario");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en createComentario:", error);
+            throw error;
+        }
+    },
+
+    // Actualizar un comentario
+    updateComentario: async (comentario) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Comentarios`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify(comentario),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al actualizar el comentario");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en updateComentario:", error);
+            throw error;
+        }
+    },
+
+    // Eliminar un comentario
+    deleteComentario: async (idComentario) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Comentarios/${idComentario}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al eliminar el comentario");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en deleteComentario:", error);
+            throw error;
+        }
+    },
+
     // FUNCIÓN PARA VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
     isAuthenticated: () => {
         return !!Global.token;
