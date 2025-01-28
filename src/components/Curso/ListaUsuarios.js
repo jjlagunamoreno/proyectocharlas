@@ -33,11 +33,11 @@ export default class ListaUsuarios extends Component {
 
       // Filtrar los usuarios activos e inactivos
       console.log(response.data)
-      const usuarios = response.data[0].alumnos;
+      const usuarios = response.data[1].alumnos;
       const usuariosFiltrados = usuarios.filter(usuario => 
         usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
       );
-      const nombreCurso = response.data[0].curso.nombre;
+      const nombreCurso = response.data[1].curso.nombre;
 
       this.setState({
         usuarios, // Guardamos todos los usuarios en el estado
@@ -128,6 +128,7 @@ export default class ListaUsuarios extends Component {
           <table>
             <thead>
               <tr>
+                <th></th>
                 <th> </th>
                 <th>Alumno</th>
                 <th>Correo</th>
@@ -139,6 +140,7 @@ export default class ListaUsuarios extends Component {
                 this.state.usuariosFiltrados.map((usuario, index) => {
                   return(
                     <tr key={index}>
+                      <td><input type='checkbox'></input></td>
                       <td><img src={this.verificarImagen(usuario.alumno.imagen)} alt='Error en la Imagen'></img></td>
                       <td>{usuario.alumno.usuario}</td>
                       <td>{usuario.alumno.email}</td>

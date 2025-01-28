@@ -204,9 +204,11 @@
 
 .filter {
     text-align: center;
+    align-self: center;
     background-color: #7b84c6;
-    padding: 2px;
+    color: white;
     border-radius: 10px;
+    padding: 2px;
     margin: 10px;
     width: 120px;
     cursor: pointer;
@@ -231,8 +233,7 @@
     
     background-color: #545a8d;
 }
-z
-.filter h4{
+
+h4 {
     margin: 0px;
-    margin-bottom: 0px;
 }
