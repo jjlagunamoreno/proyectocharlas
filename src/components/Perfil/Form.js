@@ -38,7 +38,7 @@ const Form = () => {
   };
 
   const handlePasswordVerification = async () => {
-    if (!localCurrentPassword) {
+    if (localCurrentPassword === "") {
       setError("Por favor, introduce tu contraseña actual.");
       return;
     }
