@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import Global from "../../utils/Global";
 import { PasswordContext } from '../../context/PasswordContext';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Login = ({ setIsAuthenticated }) => {
   // ESTADO PARA LOS DATOS DEL LOGIN
@@ -119,6 +121,18 @@ const Login = ({ setIsAuthenticated }) => {
     col1Ref.current.style.borderRadius = "20px 20% 30% 20px";
   };
 
+  const codigoProfesorPopUp = async () => {
+    const result = await withReactContent(Swal).fire({
+      title: "Introduce el codigo de profesor",
+      icon: "question",
+      input: "text",
+      showCancelButton: true
+    });
+
+    if (result.isConfirmed) {
+    }
+  }
+
   return (
     <div className="cuerpoLogin">
       <div className="form-container">
@@ -188,6 +202,14 @@ const Login = ({ setIsAuthenticated }) => {
           {/* FORMULARIO DE REGISTRO */}
           <div className="register-form" ref={registerFormRef}>
             <form onSubmit={handleRegisterSubmit}>
+              <div className="box-btn-profesor">
+                <button onClick={() => {codigoProfesorPopUp()}}>
+                  <span className="shadow"></span>
+                  <span className="edge"></span>
+                  <span className="front text"> ¿Eres profesor?
+                  </span>
+                </button>
+              </div>
               <div className="form-input">
                 <input
                   type="text"

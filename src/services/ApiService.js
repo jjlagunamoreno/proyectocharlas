@@ -245,6 +245,21 @@ const ApiService = {
             return await response.json();
         } catch (error) {
             console.error("Error en getCharlaById:", error);
+        }
+    },
+
+    updateEstadoUsuario: async (idUsuario, estado) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/UpdateEstadoUsuario/${idUsuario}/${estado}`, {
+                method: "PUT",
+                headers: { Authorization: Global.token },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al cambiar el estado del usuario");
+            }
+        } catch (error) {
+            console.error("Error en updateEstadoUsuario:", error);
             throw error;
         }
     },
@@ -312,6 +327,23 @@ const ApiService = {
             return await response.json();
         } catch (error) {
             console.error("Error en deleteComentario:", error);
+        }
+    },
+    updateEstadoUsuariosSeleccionados: async (userIds, estado) => {
+        try {
+            for (let i = 0; i < userIds.length; i++) {
+                const response = await fetch(`${Global.urlAlumnos}api/Usuarios/UpdateEstadoUsuario/${userIds[i]}/${estado}`, {
+                    method: "PUT",
+                    headers: { Authorization: Global.token },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error al cambiar el estado del usuario");
+                }
+            }
+
+        } catch (error) {
+            console.error("Error en updateEstadoUsuario:", error);
             throw error;
         }
     },
