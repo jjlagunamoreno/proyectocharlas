@@ -35,15 +35,14 @@
     border-radius: 1rem;
     align-items: center;
     display: flex;
-    gap: 1rem;
     overflow: hidden;
 }
 
 .Form_box_input_box_icon {
     font-size: 2rem;
-    background-color: #4c5773; /* Reemplazar variable --icons-color */
-    padding: .5rem 1rem;
-    color: #ecf0f3; /* Reemplazar variable --main-bg-color */
+    background-color: #4c5773;
+    padding: 1rem 1rem;
+    color: #ecf0f3;
     display: grid;
     cursor: pointer;
 }
@@ -51,6 +50,7 @@
 .Form_box_input_box input {
     width: 90%;
     border: 0;
+    padding: 1rem;
     background-color: transparent;
     outline: none;
 }
@@ -61,12 +61,6 @@
     outline: none;
     border-radius: 1rem;
     padding: 1rem;
-}
-
-.Form_box_input_social {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
 }
 
 .Form_box_btn {
