@@ -1,0 +1,103 @@
+.panel-admin {
+    margin: 0 auto;
+    height: 100%;
+    padding: 10px;
+}
+
+.cuadro-cursos {
+    position: absolute;
+    background-color: aqua;
+    width: 30%;
+    height: 500px;
+    margin: 10px;
+}
+
+.cuadro-usuarios {
+    position: absolute;
+    background-color: greenyellow;
+    right: 0;
+    width: 30%;
+    height: 500px;
+    margin: 10px;
+    margin-right: 20px;
+}
+
+.separador {
+    position: absolute;
+    left: 50%;
+    width: 3px;
+    opacity: 0.8;
+    border-radius: 20px;
+    background-color: gray;
+    height: 500px;
+}
+
+/* boton crear curso */ 
+.box-btn-admin {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.button-admin {
+    --main-focus: #2d8cf0;
+    --font-color: #dedede;
+    --bg-color-sub: #21264d;
+    --bg-color: #21264d;
+    --main-color: #dedede;
+    position: relative;
+    width: 150px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .button-admin, .button__icon-admin, .button__text-admin {
+    transition: all 0.3s;
+  }
+  
+  .button-admin .button__text-admin {
+    transform: translateX(15px);
+    color: var(--font-color);
+    font-weight: 600;
+  }
+  
+  .button-admin .button__icon-admin {
+    position: absolute;
+    transform: translateX(109px);
+    height: 100%;
+    width: 39px;
+    background-color: var(--bg-color-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button-admin .svg-admin {
+    width: 20px;
+    stroke: var(--main-color);
+  }
+  
+  .button-admin:hover {
+    background: var(--bg-color);
+  }
+  
+  .button-admin:hover .button__text-admin {
+    color: transparent;
+  }
+  
+  .button-admin:hover .button__icon-admin {
+    width: 148px;
+    transform: translateX(0);
+  }
+  
+  .button-admin:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px var(--main-color);
+  }

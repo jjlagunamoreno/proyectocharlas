@@ -7,6 +7,7 @@ import logout from "../../assets/images/logout.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import Global from '../../utils/Global'
 import ApiService from "../../services/ApiService";
+import settings from "../../assets/images/settings.png";
 import { ProfileImageContext } from '../../context/ProfileImageContext';
 
 const Menu = () => {
@@ -14,8 +15,10 @@ const Menu = () => {
   const barraMenu = useRef(null);
   const txtIconCurso = useRef(null);
   const txtIconRondas = useRef(null);
+  const txtIconAdmin = useRef(null);
   const iconCurso = useRef(null);
   const iconRondas = useRef(null);
+  const iconAdmin = useRef(null);
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
   const txtUserName = useRef(null);
@@ -83,6 +86,12 @@ const Menu = () => {
       txtIconRondas.current.style.color = "white";
       txtIconRondas.current.style.right = "30px";
     }
+    
+    if (txtIconAdmin.current) {
+      txtIconAdmin.current.style.transition = "2s";
+      txtIconAdmin.current.style.color = "white";
+      txtIconAdmin.current.style.right = "30px";
+    }
 
     if (txtUserName.current) {
       txtUserName.current.style.transition = "1s";
@@ -121,6 +130,11 @@ const Menu = () => {
       txtIconRondas.current.style.color = "#21264d";
       txtIconRondas.current.style.transition = "0.5s";
     }
+    
+    if (txtIconAdmin.current) {
+      txtIconAdmin.current.style.color = "#21264d";
+      txtIconAdmin.current.style.transition = "0.5s";
+    }
 
     if (txtUserName.current) {
       txtUserName.current.style.color = "#21264d";
@@ -158,7 +172,7 @@ const Menu = () => {
 
           {/* Icono de Curso */}
           {
-            Global.role !== 2 && (
+            Global.role !== 2 && Global.role !== 3 && (
             <NavLink to="/curso">
                 <div className="icon-box" ref={iconCurso}>
                   
@@ -183,6 +197,22 @@ const Menu = () => {
                 </h4>
             </div>
           </NavLink>
+
+          {/* Icono de Admin */}
+          {
+            Global.role !== 2 && Global.role !== 1 && (
+            <NavLink to="/admin">
+                <div className="icon-box" ref={iconAdmin}>
+                  
+                    <img src={settings} className="icons" alt="Admin" />
+                  
+                    <h4 className="txt-icon" ref={txtIconAdmin}>
+                      Admin
+                    </h4>
+                </div>
+            </NavLink>
+            )
+          }
 
           {/* Imagen de Perfil */}
 

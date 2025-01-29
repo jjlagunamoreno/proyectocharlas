@@ -13,6 +13,7 @@ import Perfil from "./Perfil/Perfil";
 import { ProfileImageProvider } from "../context/ProfileImageContext";
 import { PasswordProvider } from "../context/PasswordContext";
 import DetallesCharla from "../components/DetallesCharla/DetallesCharla";
+import Admin from "./Admin/Admin";
 
 const Router = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,6 +35,7 @@ const Router = () => {
                                 <Route path="/perfil" element={<Perfil />} />
                                 <Route path="/curso" element={<Curso />} />
                                 <Route path="/rondas" element={<Rondas />} />
+                                <Route path="/admin" element={<Admin />} />
                                 <Route path="/charlas/:idRonda" element={<Charlas />} />
                                 <Route path="/detallescharla/:idCharla"
                                     element={<DetallesCharla />} />
