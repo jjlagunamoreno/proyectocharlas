@@ -15,7 +15,9 @@ export default class ListaUsuarios extends Component {
   state = {
     usuarios: [], // Contendrá todos los usuarios, tanto activos como inactivos.
     usuariosFiltrados: [],
-    nombreCurso: ''
+    nombreCurso: '',  
+    UserIds: [],
+    estadoActual: true
   };
 
   // Función para cargar los usuarios desde la API
@@ -32,12 +34,11 @@ export default class ListaUsuarios extends Component {
       });
 
       // Filtrar los usuarios activos e inactivos
-      console.log(response.data)
-      const usuarios = response.data[1].alumnos;
+      const usuarios = response.data[0].alumnos;
       const usuariosFiltrados = usuarios.filter(usuario => 
         usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
       );
-      const nombreCurso = response.data[1].curso.nombre;
+      const nombreCurso = response.data[0].curso.nombre;
 
       this.setState({
         usuarios, // Guardamos todos los usuarios en el estado
@@ -53,11 +54,13 @@ export default class ListaUsuarios extends Component {
   // Función para cambiar los usuarios filtrados por estado
   changeUsers = (estado) => {
     const { usuarios } = this.state;
+    this.state.UserIds = [];
     const usuariosFiltrados = usuarios.filter(usuario => 
       usuario.alumno.estadoUsuario === estado // Filtrar según el valor booleano
     );
     this.setState({
       usuariosFiltrados: usuariosFiltrados, // Actualizamos el estado con los usuarios filtrados
+      estadoActual: estado
     });
   };
 
@@ -94,6 +97,37 @@ export default class ListaUsuarios extends Component {
     }
   };
 
+  showSwalSelectedStates = async () => {
+    const result = await withReactContent(Swal).fire({
+      title: "Cambiar el estado del usuario",
+      text: "¿Estas seguro de cambiar el estado del usuario?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+      cancelButtonText: "No"
+    });
+    
+    if (result.isConfirmed) {
+      // Primero actualizamos el estado del usuario
+      var estado = this.state.estadoActual;
+      estado = !estado;
+      console.log(estado)
+      const {UserIds} = this.state;
+      await ApiService.updateEstadoUsuariosSeleccionados(UserIds, estado);
+
+      // Luego recargamos los usuarios
+      await this.loadUsuarios();
+
+      Swal.fire({
+        title: "Actualizado!",
+        text: "El estado ha sido actualizado.",
+        icon: "success"
+      });
+    }
+  };
+
   showWarning = async () => {
     Swal.fire({
       title: "Atención!!",
@@ -109,6 +143,23 @@ export default class ListaUsuarios extends Component {
     return defaultImage; // Reemplaza con la ruta de tu imagen por defecto
   };
 
+  guardarId = (id) => {
+    // Obtener el array actual de ids del estado
+    const { UserIds } = this.state;
+    // Si el checkbox está marcado, agregamos el ID
+    if (UserIds.includes(id)) {
+      // Si el ID ya está en el array, lo eliminamos
+      this.setState(prevState => ({
+        UserIds: prevState.UserIds.filter(userId => userId !== id)
+      }));
+    } else {
+      // Si el ID no está en el array, lo agregamos
+      this.setState(prevState => ({
+        UserIds: [...prevState.UserIds, id]
+      }));
+    }
+  };
+
   render() {
     return (
       <div className='contenido'>
@@ -121,14 +172,14 @@ export default class ListaUsuarios extends Component {
             <h4>Inactivos</h4>
           </div>
           <div className='filter-warning' onClick={() => this.showWarning()}>
-            <img src={advertencia}/>
+            <img src={advertencia} alt='Advertencia'/>
           </div>
         </div>
         <div className="table__body">
           <table>
             <thead>
               <tr>
-                <th></th>
+                <th><button className='btnChangeState' onClick={() => {this.showSwalSelectedStates()}}>Cambiar Estados Seleccionados</button></th>
                 <th> </th>
                 <th>Alumno</th>
                 <th>Correo</th>
@@ -140,7 +191,13 @@ export default class ListaUsuarios extends Component {
                 this.state.usuariosFiltrados.map((usuario, index) => {
                   return(
                     <tr key={index}>
-                      <td><input type='checkbox'></input></td>
+                      <td>
+                        <input
+                        type="checkbox"
+                        checked={this.state.UserIds.includes(usuario.alumno.idUsuario)} // Verifica si el id está en el array
+                        onChange={() => this.guardarId(usuario.alumno.idUsuario)} // Llama a la función cuando cambia el estado
+                        />
+                      </td>
                       <td><img src={this.verificarImagen(usuario.alumno.imagen)} alt='Error en la Imagen'></img></td>
                       <td>{usuario.alumno.usuario}</td>
                       <td>{usuario.alumno.email}</td>

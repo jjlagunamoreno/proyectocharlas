@@ -237,3 +237,13 @@
 h4 {
     margin: 0px;
 }
+
+.btnChangeState {
+    font-size: 14px;
+    font-weight: bold;
+    width: 150px;
+    color: white;
+    border-radius: 40px;
+    background-color: #6a75dd;
+    border: 0px;
+}
