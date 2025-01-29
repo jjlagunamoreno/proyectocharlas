@@ -17,7 +17,8 @@ export default class ListaUsuarios extends Component {
     usuariosFiltrados: [],
     nombreCurso: '',  
     UserIds: [],
-    estadoActual: true
+    estadoActual: true,
+    searchQuery: '', // Texto de búsqueda
   };
 
   // Función para cargar los usuarios desde la API
@@ -99,8 +100,8 @@ export default class ListaUsuarios extends Component {
 
   showSwalSelectedStates = async () => {
     const result = await withReactContent(Swal).fire({
-      title: "Cambiar el estado del usuario",
-      text: "¿Estas seguro de cambiar el estado del usuario?",
+      title: "Cambiar el estado de los usuarios seleccionados",
+      text: "¿Estas seguro de cambiar el estado de los usuarios seleccionados?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -130,9 +131,9 @@ export default class ListaUsuarios extends Component {
 
   showWarning = async () => {
     Swal.fire({
-      title: "Atención!!",
-      text: "Para cambiar el estado de un alumno haz click en el botón situado a la derecha de un alumno.",
-      icon: "warning"
+      title: "¡Atención!",
+      text: "Para cambiar el estado de un alumno haz click en el botón situado a la derecha de un alumno o selecciona los alumnos y haz en 'Cambiar Estados Seleccionados'",
+      icon: "info"
     });
   }
 
@@ -160,6 +161,28 @@ export default class ListaUsuarios extends Component {
     }
   };
 
+  handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();  // Obtener el texto en minúsculas
+    this.setState({ searchQuery: query }, () => {
+      this.filterUsers(query);  // Llamamos a la función para filtrar usuarios
+    });
+  };
+  
+  filterUsers = (query) => {
+    const { usuarios } = this.state;
+    
+    if (!query) {
+      // Si no hay texto en el input, mostramos todos los usuarios
+      this.setState({ usuariosFiltrados: usuarios });
+    } else {
+      // Filtrar usuarios por nombre
+      const usuariosFiltrados = usuarios.filter(usuario => 
+        usuario.alumno.usuario.toLowerCase().includes(query)  // Compara el nombre del alumno con la búsqueda
+      );
+      this.setState({ usuariosFiltrados });
+    }
+  };
+
   render() {
     return (
       <div className='contenido'>
@@ -180,7 +203,19 @@ export default class ListaUsuarios extends Component {
             <thead>
               <tr>
                 <th><button className='btnChangeState' onClick={() => {this.showSwalSelectedStates()}}>Cambiar Estados Seleccionados</button></th>
-                <th> </th>
+                <th>  
+                  <div class="form">
+                    <button>
+                        <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                            <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <input class="input" required="" type="text" placeholder="Filtrar por nombre..."
+                    onChange={this.handleSearchChange}  // Filtrar al escribir
+                    value={this.state.searchQuery} // Sincronizado con el estado/
+                    /> 
+                  </div> 
+                </th>
                 <th>Alumno</th>
                 <th>Correo</th>
                 <th>Estado</th>
