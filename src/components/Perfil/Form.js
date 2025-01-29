@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import { HiOutlineMail } from "react-icons/hi";
+import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 import ApiService from "../../services/ApiService";
+import Swal from "sweetalert2";
 import "./Form.css";
 import { ProfileImageContext } from '../../context/ProfileImageContext';
 import { PasswordContext } from '../../context/PasswordContext';
@@ -34,6 +35,53 @@ const Form = () => {
   const handlePasswordChange = (e) => {
     setLocalCurrentPassword(e.target.value);
     setGlobalCurrentPassword(e.target.value);
+  };
+
+  const handlePasswordVerification = async () => {
+    if (!localCurrentPassword) {
+      setError("Por favor, introduce tu contraseña actual.");
+      return;
+    }
+
+    try {
+      // Verificar la contraseña actual
+      const loginResponse = await ApiService.login({
+        userName: localProfile.email,
+        password: localCurrentPassword,
+      });
+
+      if (!loginResponse.token) {
+        setError("Contraseña incorrecta.");
+        return;
+      }
+
+      // Mostrar SweetAlert2 para cambiar la contraseña
+      const { value: formValues } = await Swal.fire({
+        title: 'Cambiar Contraseña',
+        html:
+          '<input id="new-password" class="swal2-input" placeholder="Nueva Contraseña">' +
+          '<input id="repeat-password" class="swal2-input" placeholder="Repetir Nueva Contraseña">',
+        focusConfirm: false,
+        preConfirm: () => {
+          const newPassword = document.getElementById('new-password').value;
+          const repeatPassword = document.getElementById('repeat-password').value;
+          if (newPassword !== repeatPassword) {
+            Swal.showValidationMessage('Las contraseñas no coinciden');
+          }
+          return { newPassword };
+        }
+      });
+
+      if (formValues) {
+        // Actualizar la contraseña del usuario
+        await ApiService.updateUserPassword({ newPassword: formValues.newPassword });
+        setError("");
+        Swal.fire('Contraseña cambiada', '', 'success');
+      }
+    } catch (error) {
+      console.error("Error verifying password:", error);
+      setError("Error al verificar la contraseña.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -134,13 +182,18 @@ const Form = () => {
 
           <div className="Form_box_input">
             <label htmlFor="currentPassword">Contraseña Actual</label>
-            <input
-              type="password"
-              name="currentPassword"
-              value={localCurrentPassword}
-              onChange={handlePasswordChange}
-              className="Form_box_input_userName"
-            />
+            <div className="Form_box_input_box">
+              <input
+                type="password"
+                name="currentPassword"
+                value={localCurrentPassword}
+                onChange={handlePasswordChange}
+                placeholder="Contraseña Actual"
+              />
+              <div className="Form_box_input_box_icon" onClick={handlePasswordVerification}>
+                <HiOutlineLockClosed />
+              </div>
+            </div>
           </div>
 
           {error && <p className="error">{error}</p>}

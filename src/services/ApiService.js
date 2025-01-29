@@ -103,6 +103,29 @@ const ApiService = {
         }
     },
 
+    updateUserPassword: async (passwordData) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/UpdatePasswordUsuario`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify(passwordData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update user password");
+            }
+
+            const responseData = await response.text();
+            return responseData ? JSON.parse(responseData) : {};
+        } catch (error) {
+            console.error("Error updating user password:", error);
+            throw error;
+        }
+    },
+
     // COMPONENTE Rondas y Charlas
     getCharlasByRonda: async (idRonda) => {
         try {
