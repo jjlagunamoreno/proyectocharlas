@@ -14,6 +14,23 @@ const AdminService = {
         } catch (error) {
             console.error(error)
         }
+    },
+
+    GetUsuariosCurso: async (idCurso) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/UsuariosCurso/${idCurso}`, {
+                method: "GET",
+                headers: {
+                    Authorization: Global.token,
+                }
+            })
+
+            console.log(response)
+
+            return await response.json();
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
 

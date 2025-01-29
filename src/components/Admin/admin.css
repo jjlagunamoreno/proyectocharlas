@@ -6,18 +6,19 @@
 
 .cuadro-cursos {
     position: absolute;
-    background-color: aqua;
-    width: 30%;
+    width: 40%;
     height: 500px;
     margin: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 .cuadro-usuarios {
     position: absolute;
     background-color: greenyellow;
     right: 0;
-    width: 30%;
-    height: 500px;
+    width: 40%;
+    height: 100%;
     margin: 10px;
     margin-right: 20px;
 }
@@ -30,6 +31,20 @@
     border-radius: 20px;
     background-color: gray;
     height: 500px;
+}
+
+.box-curso {
+  width: 80%;
+  background-color: rgb(161, 161, 161);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.box-curso:hover {
+  transition: 0.3s;
+  background-color: rgb(138, 138, 138);
 }
 
 /* boton crear curso */ 
