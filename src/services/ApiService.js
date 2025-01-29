@@ -4,6 +4,7 @@ const ApiService = {
     //-- COMPONENTE Login
     login: async (credentials) => {
         try {
+            // Primera solicitud: Obtener el token
             const response = await fetch(`${Global.urlAlumnos}api/Auth/Login`, {
                 method: "POST",
                 headers: {
@@ -18,7 +19,40 @@ const ApiService = {
 
             const data = await response.json();
             Global.token = `Bearer ${data.response}`;
-            return { token: data.response, role: data.idrole };
+
+            // Segunda solicitud: Obtener el perfil del usuario
+            const profileResponse = await fetch(`${Global.urlAlumnos}api/Usuarios/Perfil`, {
+                method: "GET",
+                headers: { Authorization: Global.token },
+            });
+
+            if (!profileResponse.ok) {
+                throw new Error("No se pudo obtener el perfil del usuario.");
+            }
+
+            const userProfile = await profileResponse.json();
+            const usuario = userProfile.usuario;
+
+            // Guardar los datos del usuario en Global
+            Global.userId = usuario.idUsuario;
+            Global.role = usuario.idRole;
+            Global.nombre = usuario.nombre;
+            Global.apellido = usuario.apellidos;
+            Global.estadoUsuario = usuario.estadoUsuario;
+
+            // Si el usuario está inactivo, impedir acceso
+            if (!usuario.estadoUsuario) {
+                throw new Error("Tu cuenta está inactiva. No puedes acceder a la plataforma.");
+            }
+
+            return {
+                token: data.response,
+                role: usuario.idRole,
+                userId: usuario.idUsuario,
+                nombre: usuario.nombre,
+                apellido: usuario.apellidos,
+                estadoUsuario: usuario.estadoUsuario
+            };
         } catch (error) {
             console.error("Login error:", error);
             throw error;

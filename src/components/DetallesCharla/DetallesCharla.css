@@ -1,10 +1,8 @@
 /* Contenedor principal */
 .detalles-charla-container {
-    padding: 0 20px;
-    /* Ajustado para eliminar margen superior */
+    padding: 20px;
     max-width: 800px;
     margin: 0 auto;
-    /* Centrado sin espaciado adicional */
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -30,53 +28,48 @@
     background-color: #0056b3;
 }
 
-/* Recursos */
-.detalles-charla-container .list-group-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Imagen de la charla */
+.detalles-charla-container img {
+    max-width: 80%;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+}
+
+/* Sección de comentarios */
+.comentarios-wrapper {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comentarios-section {
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Lista de comentarios */
+.comentarios-list {
+    margin-top: 15px;
+}
+
+/* Estilos individuales de comentarios */
+.comentario-item {
+    background-color: #ffffff;
+    border-radius: 8px;
     padding: 10px;
-    border: 1px solid #ddd;
     margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff;
 }
 
-.detalles-charla-container .list-group-item p {
-    margin: 0;
-    font-size: 14px;
-    color: #555;
-}
-
-.detalles-charla-container .list-group-item .btn {
-    font-size: 14px;
-    padding: 5px 10px;
-    margin-left: 10px;
-}
-
-.detalles-charla-container .list-group-item .btn-primary {
-    background-color: #28a745;
-    border: none;
-}
-
-.detalles-charla-container .list-group-item .btn-primary:hover {
-    background-color: #218838;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .detalles-charla-container {
-        padding: 10px;
-    }
-
-    .detalles-charla-container .list-group-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .detalles-charla-container .list-group-item .btn {
-        margin: 10px 0 0 0;
-    }
+.comentario-item small {
+    color: #6c757d;
 }
 
 .comentario-actions {
@@ -100,4 +93,23 @@
 
 .comentario-actions .btn-link.text-danger:hover {
     color: #c82333;
+}
+
+/* Botón de agregar recursos */
+.btn-agregar-recurso {
+    display: block;
+    margin: 20px auto;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-agregar-recurso:hover {
+    background-color: #218838;
 }

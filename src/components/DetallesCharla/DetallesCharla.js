@@ -11,48 +11,46 @@ const DetallesCharla = () => {
     const [error, setError] = useState(null);
     const [comentarios, setComentarios] = useState([]);
     const [nuevoComentario, setNuevoComentario] = useState("");
+    const [reloadTrigger, setReloadTrigger] = useState(0);
+
+    const fetchCharla = async () => {
+        try {
+            const response = await ApiService.getCharlaById(idCharla);
+            setCharla(response);
+            setComentarios(response.comentarios || []);
+        } catch (error) {
+            console.error("Error al cargar los detalles de la charla:", error);
+            setError("No se pudo cargar la charla.");
+        }
+    };
 
     useEffect(() => {
-        const fetchCharla = async () => {
-            try {
-                const response = await ApiService.getCharlaById(idCharla);
-                setCharla(response);
-                console.log("Comentarios recibidos:", response.comentarios); // Depuración
-                setComentarios(response.comentarios || []);
-            } catch (error) {
-                console.error("Error al cargar los detalles de la charla:", error);
-                setError("No se pudo cargar la charla.");
-            }
-        };
-
         fetchCharla();
-    }, [idCharla]);
+    }, [idCharla, reloadTrigger]);
 
     const handleAddComment = async () => {
         if (nuevoComentario.trim() === "") return;
 
         const nuevoComentarioObj = {
-            idComentario: 0, // Generado automáticamente
-            idCharla: charla.charla.idCharla, // ID de la charla actual
-            idUsuario: Global.userId, // ID del usuario autenticado
+            idComentario: 0,
+            idCharla: charla.charla.idCharla,
+            idUsuario: Global.userId,
             contenido: nuevoComentario,
-            fecha: new Date().toISOString(), // Fecha actual
+            fecha: new Date().toISOString(),
         };
 
         try {
-            const createdComment = await ApiService.createComentario(nuevoComentarioObj);
-            const comentarioConUsuario = { ...createdComment, usuario: Global.username };
-            setComentarios([...comentarios, comentarioConUsuario]); // Agrega el comentario creado a la lista
-            setNuevoComentario(""); // Limpia el campo de texto
+            await ApiService.createComentario(nuevoComentarioObj);
+            setNuevoComentario("");
+            setReloadTrigger(prev => prev + 1);
         } catch (error) {
             console.error("Error al agregar el comentario:", error);
-            setError("No se pudo agregar el comentario. Inténtalo de nuevo.");
+            setError("No se pudo agregar el comentario.");
         }
     };
 
     const handleEditComment = async (comentario) => {
         const nuevoContenido = prompt("Edita tu comentario:", comentario.contenido);
-
         if (nuevoContenido === null || nuevoContenido.trim() === "") return;
 
         const comentarioActualizado = {
@@ -63,15 +61,11 @@ const DetallesCharla = () => {
 
         try {
             await ApiService.updateComentario(comentarioActualizado);
-            setComentarios((prevComentarios) =>
-                prevComentarios.map((c) =>
-                    c.idComentario === comentario.idComentario ? comentarioActualizado : c
-                )
-            );
+            navigate("/rondas", { replace: true });
         } catch (error) {
             console.error("Error al actualizar el comentario:", error);
-            setError("No se pudo actualizar el comentario.");
         }
+        fetchCharla();
     };
 
     const handleDeleteComment = async (idComentario) => {
@@ -79,20 +73,16 @@ const DetallesCharla = () => {
 
         try {
             await ApiService.deleteComentario(idComentario);
-            setComentarios((prevComentarios) =>
-                prevComentarios.filter((comentario) => comentario.idComentario !== idComentario)
-            );
+            navigate("/rondas", { replace: true });
         } catch (error) {
             console.error("Error al eliminar el comentario:", error);
-            setError("No se pudo eliminar el comentario.");
         }
+        fetchCharla();
     };
 
     return (
         <div className="detalles-charla-container">
-            <button className="btn btn-secondary" onClick={() => navigate(-1)}>
-                ←
-            </button>
+            <button className="btn btn-secondary" onClick={() => navigate(-1)}>←</button>
 
             {error && <div className="alert alert-danger">{error}</div>}
             {charla && (
@@ -116,11 +106,7 @@ const DetallesCharla = () => {
                                         <p><strong>Nombre:</strong> {recurso.nombre}</p>
                                         <p><strong>Descripción:</strong> {recurso.descripcion}</p>
                                     </div>
-
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => window.open(recurso.url, "_blank")}
-                                    >
+                                    <button className="btn btn-primary" onClick={() => window.open(recurso.url, "_blank")}>
                                         Abrir Enlace
                                     </button>
                                 </li>
@@ -134,28 +120,15 @@ const DetallesCharla = () => {
                     {comentarios.length > 0 ? (
                         <div className="comentarios">
                             {comentarios.map((comentario, index) => (
-                                <div key={index} className="comentario-item">
+                                <div key={index} className="comentario-item" style={{ backgroundColor: "#f8f9fa", padding: "10px", borderRadius: "8px", marginBottom: "10px" }}>
+                                    <small className="text-muted">{new Date(comentario.fecha).toLocaleString()}</small>
                                     <p><strong>{comentario.usuario}:</strong> {comentario.contenido}</p>
-                                    <small className="text-muted">
-                                        {new Date(comentario.fecha).toLocaleString()}
-                                    </small>
-                                    {comentario.usuarioId === Global.userId && (
+                                    {`${Global.nombre} ${Global.apellido}` === comentario.usuario && (
                                         <div className="comentario-actions">
-                                            <button
-                                                className="btn btn-link text-primary"
-                                                onClick={() => handleEditComment(comentario)}
-                                            >
-                                                ✏️
-                                            </button>
-                                            <button
-                                                className="btn btn-link text-danger"
-                                                onClick={() => handleDeleteComment(comentario.idComentario)}
-                                            >
-                                                🗑️
-                                            </button>
+                                            <button className="btn btn-link text-primary" onClick={() => handleEditComment(comentario)}>✏️</button>
+                                            <button className="btn btn-link text-danger" onClick={() => handleDeleteComment(comentario.idComentario)}>🗑️</button>
                                         </div>
                                     )}
-
                                 </div>
                             ))}
                         </div>
@@ -163,18 +136,15 @@ const DetallesCharla = () => {
                         <p>No hay comentarios.</p>
                     )}
 
-
                     {error && <div className="alert alert-danger">{error}</div>}
+
                     <textarea
                         className="form-control mb-3"
                         placeholder="Escribe un comentario..."
                         value={nuevoComentario}
                         onChange={(e) => setNuevoComentario(e.target.value)}
                     />
-                    <button className="btn btn-success" onClick={handleAddComment}>
-                        Agregar Comentario
-                    </button>
-
+                    <button className="btn btn-success" onClick={handleAddComment}>Agregar Comentario</button>
                 </div>
             )}
         </div>

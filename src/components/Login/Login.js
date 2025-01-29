@@ -48,22 +48,26 @@ const Login = ({ setIsAuthenticated }) => {
 
   // FUNCIÓN PARA ENVIAR LOS DATOS DE LOGIN A LA API
   const handleLoginSubmit = async (e) => {
-    e.preventDefault(); // PREVENIR EL COMPORTAMIENTO POR DEFECTO DEL FORMULARIO
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
     try {
-      // LLAMADA AL MÉTODO LOGIN EN ApiService
-      const { token, role } = await ApiService.login(credentials);
-      if (token) {
-        // GUARDAR EL TOKEN EN GLOBAL
-        Global.token = `Bearer ${token}`;
-        // GUARDAMOS EL ID DEL ROL DEL USUARIO QUE ACCEDE
-        Global.role = role;
-        setIsAuthenticated(true); // ACTUALIZAR EL ESTADO DE AUTENTICACIÓN
-        setCurrentPassword(credentials.password); // Store the password in the context
+      const { token, role, estadoUsuario } = await ApiService.login(credentials);
 
-        navigate("/"); // REDIRIGIR AL HOME
+      if (!estadoUsuario) {
+        setError("Tu cuenta está inactiva. No puedes acceder a la plataforma.");
+        return;
+      }
+
+      if (token) {
+        // Guardar el token en Global
+        Global.token = `Bearer ${token}`;
+        Global.role = role;
+        setIsAuthenticated(true); // Actualizar el estado de autenticación
+        setCurrentPassword(credentials.password); // Guardar la contraseña en contexto (si aplica)
+
+        navigate("/"); // Redirigir al Home
       }
     } catch (err) {
-      setError("Credenciales incorrectas"); // MENSAJE DE ERROR EN CASO DE FALLA
+      setError(err.message || "Credenciales incorrectas"); // Mensaje de error en caso de falla
     }
   };
 
