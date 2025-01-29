@@ -61,7 +61,7 @@ const DetallesCharla = () => {
 
         try {
             await ApiService.updateComentario(comentarioActualizado);
-            
+            navigate("/rondas", { replace: true });
         } catch (error) {
             console.error("Error al actualizar el comentario:", error);
         }
@@ -73,7 +73,7 @@ const DetallesCharla = () => {
 
         try {
             await ApiService.deleteComentario(idComentario);
-            
+            navigate("/rondas", { replace: true });
         } catch (error) {
             console.error("Error al eliminar el comentario:", error);
         }
