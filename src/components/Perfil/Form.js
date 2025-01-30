@@ -54,6 +54,7 @@ const Form = () => {
         setError("Contraseña incorrecta.");
         return;
       }
+      setError("");
 
       // Mostrar SweetAlert2 para cambiar la contraseña
       const { value: formValues } = await Swal.fire({
@@ -65,8 +66,13 @@ const Form = () => {
         preConfirm: () => {
           const newPassword = document.getElementById('new-password').value;
           const repeatPassword = document.getElementById('repeat-password').value;
+          if (!newPassword || !repeatPassword) {
+            Swal.showValidationMessage('Por favor, completa ambos campos');
+            return false;
+          }
           if (newPassword !== repeatPassword) {
             Swal.showValidationMessage('Las contraseñas no coinciden');
+            return false;
           }
           return { newPassword };
         }
@@ -75,7 +81,6 @@ const Form = () => {
       if (formValues) {
         // Actualizar la contraseña del usuario
         await ApiService.updateUserPassword({ newPassword: formValues.newPassword });
-        setError("");
         Swal.fire('Contraseña cambiada', '', 'success');
       }
     } catch (error) {

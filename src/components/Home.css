@@ -1,0 +1,79 @@
+/*CSS SHAPED FORM*/
+.custom-shape-divider-top-1738155079 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.custom-shape-divider-top-1738155079 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 150px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-top-1738155079 .shape-fill {
+    fill: #21264D;
+}
+/*CSS Home*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+.content {
+    width: 90%;
+    margin: 30% 0 15% 20%;
+    max-width: 800px;
+}
+h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.social-icons a {
+    color: white;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+.illustration {
+    max-width: 100%;
+    margin-left: 20%;
+    height: auto;
+}
+.illustration img{
+    width: 100%;
+    height: auto;
+}
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+    .content {
+        text-align: left;
+    }
+}
