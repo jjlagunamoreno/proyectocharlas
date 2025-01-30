@@ -3,6 +3,9 @@ import styles from './admin.css'
 import Global from '../../utils/Global'
 import axios from 'axios'
 import AdminService from '../../services/AdminService'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import defaultImage from '../../assets/images/nopfp.png'
 
 export default class Admin extends Component {
 
@@ -74,6 +77,41 @@ export default class Admin extends Component {
         console.error("Error al cargar los usuarios", error);
       }
     }
+  
+  showInfoUser = async (id) => {
+    const usuario = this.state.alumnos.find((alumno) => alumno.idUsuario === id)
+
+    // Verificamos si la imagen comienza con "http" o "https"
+    let imagenUrl = usuario.imagen;
+    if (!imagenUrl.startsWith('http://') && !imagenUrl.startsWith('https://')) {
+        // Si no es una URL externa, asignamos una imagen local por defecto
+        imagenUrl = defaultImage; // Asegúrate de tener esta imagen local en tu proyecto
+    }
+
+    const nombre = `<h3>${usuario.usuario}</h3>`;
+    const imagen = `<img class="img-info" src="${imagenUrl}" alt="Imagen de usuario" style="width: 100px; height: 100px;">`;
+    const email = `<p>${usuario.email} ${usuario.idUsuario}</p>`;
+
+    const result = await withReactContent(Swal).fire({
+      html: `
+            <div style="text-align: center;">
+                ${imagen}
+                ${nombre}
+                ${email}
+            </div>
+      `,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Ok",
+    });
+
+    // if (result.isConfirmed) {
+    //   // Primero actualizamos el estado del usuario
+    //   await ApiService.updateEstadoUsuario(idUsuario, estado);
+
+    //   // Luego recargamos los usuarios
+    //   await this.loadUsuarios();
+    // }
+}
 
   render() {
     return (
@@ -136,7 +174,7 @@ export default class Admin extends Component {
                       {
                         this.state.alumnos.map((alumno, index) => {
                           return(
-                            <div key={index}>
+                            <div key={index} onClick={() => {this.showInfoUser(alumno.idUsuario)}}>
                               <span>{alumno.usuario}</span>
                             </div>
                           )

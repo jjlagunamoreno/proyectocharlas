@@ -50,6 +50,10 @@
   cursor: pointer;
 }
 
+.box-curso b {
+  color: #353d7a;
+}
+
 .box-curso:hover {
   transition: 0.3s;
   background-color: rgb(221, 221, 221);
@@ -186,4 +190,10 @@ select {
 .nombres-users span:hover{
   transition: 0.2s;
   background-color: rgb(238, 238, 238);
+}
+
+.img-info{
+  width: 128px;
+  height: 128px;
+  border-radius: 100%;
 }
