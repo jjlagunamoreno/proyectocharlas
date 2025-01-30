@@ -176,7 +176,7 @@ const Menu = () => {
             <NavLink to="/curso">
                 <div className="icon-box" ref={iconCurso}>
                   
-                    <img src={curso} className="icons" alt="Curso" />
+                    <img src={curso} className="icons shadow" alt="Curso" />
                   
                     <h4 className="txt-icon" ref={txtIconCurso}>
                       Curso
@@ -190,7 +190,7 @@ const Menu = () => {
           <NavLink to="/rondas">
             <div className="icon-box" ref={iconRondas}>
               
-                <img src={rondas} className="icons" alt="Rondas" />
+                <img src={rondas} className="icons shadow" alt="Rondas" />
               
                 <h4 className="txt-icon" ref={txtIconRondas}>
                   Rondas
@@ -204,7 +204,7 @@ const Menu = () => {
             <NavLink to="/admin">
                 <div className="icon-box" ref={iconAdmin}>
                   
-                    <img src={settings} className="icons" alt="Admin" />
+                    <img src={settings} className="icons shadow" alt="Admin" />
                   
                     <h4 className="txt-icon" ref={txtIconAdmin}>
                       Admin

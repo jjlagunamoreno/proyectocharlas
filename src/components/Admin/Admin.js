@@ -80,28 +80,29 @@ export default class Admin extends Component {
       <div className='contenido'>
         <h1>Panel De Control Admin</h1>
         <div className='box-btn-admin'>
-            <button type="button" className="button-admin" onClick={()=>{this.cc()}}>
+            <button type="button" className="button-admin">
                 <span className="button__text-admin">Crear Curso</span>
                 <span className="button__icon-admin"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" stroke="currentColor" height="24" fill="none" className="svg-admin"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
             </button>
         </div>
-        <div>
-            <select onChange={this.handleAnioChange} defaultValue="">
-                <option value="">Seleccionar Año</option>
-                {this.state.anios.map((anio, index) => (
-                    <option key={index} value={anio}>
-                        {anio}
-                    </option>
-                ))}
-            </select>
-        </div>
         <div className='panel-admin'>
+          
             <div className='cuadro-cursos'>
+              <div>
+                <select onChange={this.handleAnioChange} defaultValue="">
+                  <option value="">Seleccionar Año</option>
+                  {this.state.anios.map((anio, index) => (
+                    <option key={index} value={anio}>
+                      {anio}
+                    </option>
+                  ))}
+                </select>
+              </div>
                 {
                   this.getCursosFiltrados().map((curso, index) => {
                     return (
                       <div className='box-curso' onClick={() => {this.mostrarUsuariosCurso(curso.idCurso)}} key={index}>
-                        <span>{curso.nombre}</span>
+                        <span><b>{curso.idCurso}</b> {curso.nombre}</span>
                       </div>
                     )
                   })
@@ -109,29 +110,39 @@ export default class Admin extends Component {
             </div>
             <div className='separador'></div>
             <div className='cuadro-usuarios'>
-                <span>Profesores:</span>
-                <div>
-                  {
-                    this.state.profesores.map((profe, index) => {
-                      return(
-                        <div key={index}>
-                          <span>{profe.usuario}</span>
-                        </div>
-                      )
-                    })
-                  }
+                
+                <div className='box-users'>
+                  <div className='titulo-box'>
+                    <span>Profesores:</span>
+                  </div>
+                  <div className='nombres-users'>
+                    {
+                      this.state.profesores.map((profe, index) => {
+                        return(
+                          <div key={index}>
+                            <span>{profe.usuario}</span>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                  
                 </div>
-                <span>Alumnos:</span>
-                <div>
-                  {
-                    this.state.alumnos.map((alumno, index) => {
-                      return(
-                        <div key={index}>
-                          <span>{alumno.usuario}</span>
-                        </div>
-                      )
-                    })
-                  }
+                <div className='box-users'>
+                  <div className='titulo-box'>
+                    <span>Alumnos:</span>
+                  </div>
+                  <div className='nombres-users'>
+                      {
+                        this.state.alumnos.map((alumno, index) => {
+                          return(
+                            <div key={index}>
+                              <span>{alumno.usuario}</span>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
                 </div>
                 <div>
               </div>

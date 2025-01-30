@@ -149,3 +149,8 @@
 .change .bar3 {
     transform: translate(0, -11px) rotate(45deg);
 }
+
+.shadow:hover {
+    transition: 0.2s;
+    filter: drop-shadow(0px 0px 8px grey);
+}
