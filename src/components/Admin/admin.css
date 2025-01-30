@@ -1,0 +1,199 @@
+.panel-admin {
+    margin: 0 auto;
+    height: 100%;
+    padding: 10px;
+}
+
+.cuadro-cursos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+    position: absolute;
+    width: 40%;
+    height: max-content;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cuadro-usuarios {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+    position: absolute;
+    right: 10px;
+    padding: 10px;
+    width: 40%;
+    height: max-content;
+    margin: 10px;
+    margin-right: 20px;
+}
+
+.separador {
+    position: absolute;
+    left: 50%;
+    width: 2px;
+    opacity: 0.8;
+    border-radius: 20px;
+    background-color: gray;
+    height: 800px;
+}
+
+.box-curso {
+  width: 80%;
+  background-color: rgb(238, 238, 238);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.box-curso b {
+  color: #353d7a;
+}
+
+.box-curso:hover {
+  transition: 0.3s;
+  background-color: rgb(221, 221, 221);
+}
+
+/* boton crear curso */ 
+.box-btn-admin {
+    position: absolute;
+    top: 15px;
+    right: 45px;
+}
+
+.button-admin {
+    --main-focus: #2d8cf0;
+    --font-color: #dedede;
+    --bg-color-sub: #21264d;
+    --bg-color: #21264d;
+    --main-color: #dedede;
+    position: relative;
+    width: 150px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .button-admin, .button__icon-admin, .button__text-admin {
+    transition: all 0.3s;
+  }
+  
+  .button-admin .button__text-admin {
+    transform: translateX(15px);
+    color: var(--font-color);
+    font-weight: 600;
+  }
+  
+  .button-admin .button__icon-admin {
+    position: absolute;
+    transform: translateX(109px);
+    height: 100%;
+    width: 39px;
+    background-color: var(--bg-color-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button-admin .svg-admin {
+    width: 20px;
+    stroke: var(--main-color);
+  }
+  
+  .button-admin:hover {
+    background: var(--bg-color);
+  }
+  
+  .button-admin:hover .button__text-admin {
+    color: transparent;
+  }
+  
+  .button-admin:hover .button__icon-admin {
+    width: 148px;
+    transform: translateX(0);
+  }
+  
+  .button-admin:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px var(--main-color);
+  }
+
+  /*BOX PROFESORES*/
+  .box-users {
+    width: 90%;
+    height: 300px;
+    overflow: auto;
+    border: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 20px 5px 5px 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Estilo de la barra de desplazamiento */
+.box-users::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de desplazamiento */
+  height: 12px; /* Altura si el scroll es horizontal */
+}
+
+/* Estilo de la parte que se desliza */
+.box-users::-webkit-scrollbar-thumb {
+  background-color: #21264d; /* Color de la parte deslizante */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 3px solid #ffffff; /* Borde alrededor del thumb */
+}
+
+/* Estilo de la parte de fondo del scroll */
+.box-users::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Fondo del track */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.titulo-box {
+  position: absolute;
+  font-weight: bold;
+  background-color: white;
+  margin-top: -10px;
+  width: 80%;
+  border-radius: 8px 0 0 0;
+}
+.titulo-box:hover {
+  cursor: default;
+}
+
+select {
+  padding: 8px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.nombres-users{
+  margin-top: 20px;
+}
+
+.nombres-users span{
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.nombres-users span:hover{
+  transition: 0.2s;
+  background-color: rgb(238, 238, 238);
+}
+
+.img-info{
+  width: 128px;
+  height: 128px;
+  border-radius: 100%;
+}
