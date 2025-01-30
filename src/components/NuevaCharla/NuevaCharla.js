@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ApiService from "../../services/ApiService";
+import FileService from "../../services/FileService";
 import Global from "../../utils/Global";
+import "./NuevaCharla.css"
 
 const NuevaCharla = () => {
-  const { idRonda } = useParams();  // Obtener ID de la ronda desde la URL
+  const { idRonda } = useParams();
   const navigate = useNavigate();
 
-  const [charla, setCharla] = useState(null);  // Inicializar como null
+  const [charla, setCharla] = useState({
+    idCharla: 0,
+    titulo: "",
+    descripcion: "",
+    tiempo: 10,
+    fechaPropuesta: new Date().toISOString().split("T")[0] + "T00:00:00",
+    idUsuario: Global.userId || 0,
+    idEstadoCharla: 1,
+    idRonda: idRonda ? parseInt(idRonda, 10) : 0,
+    imagenCharla: "",
+  });
+
   const [imagen, setImagen] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,25 +29,15 @@ const NuevaCharla = () => {
     if (idRonda) {
       const rondaId = parseInt(idRonda, 10);
       if (!isNaN(rondaId)) {
-        setCharla({
-          titulo: "",
-          descripcion: "",
-          tiempo: 0,
-          fechaPropuesta: new Date().toISOString(),
-          idUsuario: Global.userId || 0,  // Asegurar que tiene un valor válido
-          idEstadoCharla: 1,  // Estado inicial (ajustar si es necesario)
-          idRonda: rondaId,  // USAR idRonda CORRECTAMENTE
-          imagenCharla: "",
-        });
+        setCharla((prevCharla) => ({
+          ...prevCharla,
+          idRonda: rondaId,
+        }));
       } else {
-        setError("Error: ID de ronda no válido en la URL.");
+        setError("⚠️ Error: ID de ronda no válido en la URL.");
       }
     }
   }, [idRonda]);
-
-  if (!charla) {
-    return <p className="text-danger">Cargando...</p>;
-  }
 
   const handleChange = (e) => {
     setCharla({
@@ -46,7 +49,30 @@ const NuevaCharla = () => {
   const handleImageChange = (e) => {
     if (e.target.files.length > 0) {
       setImagen(e.target.files[0]);
+      console.log("🖼 Archivo seleccionado:", e.target.files[0]);
+    } else {
+      setImagen(null);
+      console.log("⚠️ No se seleccionó ninguna imagen.");
     }
+  };
+
+  const convertirImagenBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      if (!file || !(file instanceof File)) {
+        reject(new Error("El archivo seleccionado no es válido."));
+        return;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = () => {
+        const buffer = reader.result;
+        const base64 = btoa(
+          new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
+        );
+        resolve(base64);
+      };
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +90,8 @@ const NuevaCharla = () => {
     try {
       const charlaData = {
         ...charla,
-        tiempo: parseInt(charla.tiempo, 10), // Convertir a número
+        tiempo: parseInt(charla.tiempo, 10),
+        idUsuario: Global.userId,
       };
 
       console.log("📡 Enviando JSON:", JSON.stringify(charlaData, null, 2));
@@ -73,26 +100,26 @@ const NuevaCharla = () => {
       console.log("✅ Charla creada con ID:", nuevaCharla.idCharla);
 
       if (imagen) {
-        const formData = new FormData();
-        formData.append("fileName", imagen.name);
+        try {
+          console.log("📡 Convirtiendo imagen a Base64...");
+          const base64Imagen = await convertirImagenBase64(imagen);
 
-        const reader = new FileReader();
-        reader.readAsDataURL(imagen);
-        reader.onload = async () => {
-          formData.append("fileContent", reader.result.split(",")[1]); // Solo Base64
-
-          await ApiService.uploadImagenCharla(nuevaCharla.idCharla, formData);
+          console.log("📡 Enviando imagen a la API...");
+          await FileService.uploadCharlaImage(nuevaCharla.idCharla, imagen.name, base64Imagen);
           console.log("✅ Imagen subida correctamente");
+        } catch (err) {
+          console.error("🔥 Error al subir la imagen:", err);
+          setError(`❌ Error al subir la imagen: ${err.message}`);
           setLoading(false);
-          navigate(`/charlas/${idRonda}`);
-        };
-      } else {
-        setLoading(false);
-        navigate(`/charlas/${idRonda}`);
+          return;
+        }
       }
+
+      setLoading(false);
+      navigate(`/charlas/${idRonda}`);
     } catch (err) {
       console.error("🔥 Error en NuevaCharla:", err);
-      setError("Error al crear la charla. Inténtalo de nuevo.");
+      setError(`❌ Error: ${err.message}`);
       setLoading(false);
     }
   };
@@ -126,7 +153,7 @@ const NuevaCharla = () => {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Duración (minutos)</label>
+          <label className="form-label">Duración (120 minutos maximo)</label>
           <input
             type="number"
             className="form-control"

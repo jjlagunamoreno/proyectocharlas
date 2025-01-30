@@ -329,6 +329,7 @@ const ApiService = {
             console.error("Error en deleteComentario:", error);
         }
     },
+
     updateEstadoUsuariosSeleccionados: async (userIds, estado) => {
         try {
             for (let i = 0; i < userIds.length; i++) {
@@ -375,7 +376,7 @@ const ApiService = {
                 throw new Error("❌ No se encontró la charla para eliminar.");
             }
             if (!response.ok) {
-                throw new Error("⚠️ Error inesperado al eliminar la charla.");
+                throw new Error("⚠️ Charla ya votada, no podemos eliminarla.");
             }
 
             console.log("✅ Charla eliminada correctamente.");
@@ -386,17 +387,21 @@ const ApiService = {
         }
     },
 
-    // Crear una nueva charla
     createCharla: async (charlaData) => {
         try {
+            if (!Global.token) {
+                throw new Error("⚠️ Error: No hay token de autenticación.");
+            }
+
             console.log("📡 Enviando solicitud a la API de Charlas...");
             console.log("🔹 Datos de la charla:", JSON.stringify(charlaData, null, 2));
+            console.log("🔑 Token actual:", Global.token); // <-- Verificar token en consola
 
             const response = await fetch(`${Global.urlAlumnos}api/Charlas`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${Global.token}`, // Asegurar formato correcto
+                    "Authorization": Global.token.includes("Bearer") ? Global.token : `Bearer ${Global.token}`, // ✅ Corregir doble "Bearer"
                 },
                 body: JSON.stringify(charlaData),
             });
@@ -415,19 +420,27 @@ const ApiService = {
     },
 
     // Subir imagen de la charla
-    uploadImagenCharla: async (idCharla, formData) => {
+    uploadImagenCharla: async (idCharla, file) => {
         try {
-            console.log("📡 Subiendo imagen...");
+            if (!(file instanceof File)) {
+                throw new Error("El archivo de imagen no es válido.");
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+            console.log("📡 Enviando imagen al servidor...");
 
             const response = await fetch(`${Global.urlAlumnos}api/Files/UploadImagenCharla/${idCharla}`, {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${Global.token}` }, // Sin Content-Type
-                body: formData,
+                headers: {
+                    "Authorization": `Bearer ${Global.token}`, // No incluir "Content-Type"
+                },
+                body: formData, // Enviar `FormData`
             });
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error("⚠️ Respuesta de la API:", errorText);
+                console.error("⚠️ Respuesta de la API (subida de imagen):", errorText);
                 throw new Error(`Error al subir imagen: ${response.status} ${response.statusText}`);
             }
 
