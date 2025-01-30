@@ -76,7 +76,7 @@ const DetallesCharla = () => {
             await ApiService.deleteCharla(idCharla);
 
             alert("✅ Charla eliminada con éxito.");
-            navigate("/rondas", { replace: true });
+            navigate(-1);
         } catch (error) {
             console.error("⚠️ Error al eliminar la charla:", error);
             setError(error.message || "No se pudo eliminar la charla.");

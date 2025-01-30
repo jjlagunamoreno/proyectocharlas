@@ -184,20 +184,20 @@ const ApiService = {
         }
     },
 
-    getVotoAlumnoRonda: async (idCharla) => {
+    getVotoAlumnoRonda: async (idRonda) => {
         try {
-            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoCharla/${idCharla}`, {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoRonda/${idRonda}`, {
                 headers: {
-                    "Authorization": Global.token,
+                    Authorization: Global.token,
                 },
             });
 
             if (!response.ok) {
-                if (response.status === 404) return null; // No se encontró voto
-                throw new Error("Error al obtener el estado del voto.");
+                if (response.status === 404) return null; // Sin votos para esta ronda
+                throw new Error("Error al obtener el voto del alumno");
             }
 
-            return await response.json(); // Devuelve los datos del voto
+            return await response.json();
         } catch (error) {
             console.error("Error en getVotoAlumnoRonda:", error);
             throw error;

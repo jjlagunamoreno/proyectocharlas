@@ -7,6 +7,7 @@ import "./Charlas.css";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { Link } from "react-router-dom";
+import Global from "../../utils/Global"
 
 const Charlas = () => {
   const { idRonda } = useParams();
@@ -16,7 +17,7 @@ const Charlas = () => {
   const [fechaPresentacion, setFechaPresentacion] = useState(null);
   const [contador, setContador] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [celebration, setCelebration] = useState(false);
-  const [votoSeleccionado, setVotoSeleccionado] = useState(null);
+  const [charlaCreada, setCharlaCreada] = useState(false);
   const [mostrarBotones, setMostrarBotones] = useState(false);
   const [cerrada, setCerrada] = useState(false);
   const [datosCargados, setDatosCargados] = useState(false); // Control de datos cargados
@@ -53,6 +54,55 @@ const Charlas = () => {
     fetchRondaInfo();
     fetchCharlas();
   }, [idRonda]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [ronda, charlasLista, voto] = await Promise.all([
+          ApiService.getRondaById(idRonda),
+          ApiService.getCharlasByRonda(idRonda),
+          ApiService.getVotoAlumnoRonda(idRonda),
+        ]);
+
+        setModulo(ronda.descripcionModulo || "Módulo sin nombre");
+        setFechaPresentacion(new Date(ronda.fechaPresentacion));
+        setCerrada(new Date(ronda.fechaPresentacion) < new Date());
+        setVotoUsuario(voto?.idCharla || null);
+        setDatosCargados(true);
+
+        // ✅ Ordenar charlas: Si hay una charla votada, se mueve al inicio de la lista
+        if (voto?.idCharla) {
+          const charlaVotada = charlasLista.find((charla) => charla.idCharla === voto.idCharla);
+          const otrasCharlas = charlasLista.filter((charla) => charla.idCharla !== voto.idCharla);
+          setCharlas([charlaVotada, ...otrasCharlas]); // ✅ Charla votada al inicio
+        } else {
+          setCharlas(charlasLista); // Si no hay voto, mantener el orden normal
+        }
+
+      } catch (err) {
+        console.error("Error al obtener los datos:", err);
+        setError("No se pudieron cargar los datos.");
+      }
+    };
+
+    fetchData();
+  }, [idRonda]);
+
+  useEffect(() => {
+    const fetchCharlasUsuario = async () => {
+      try {
+        const response = await ApiService.getCharlasByRonda(idRonda);
+        const usuarioId = Global.userId; // Asegúrate de tener el ID del usuario autenticado
+        const charlaDelUsuario = response.some(charla => charla.idUsuario === usuarioId);
+        setCharlaCreada(charlaDelUsuario);
+      } catch (err) {
+        console.error("Error al verificar si el usuario ya creó una charla:", err);
+      }
+    };
+
+    fetchCharlasUsuario();
+  }, [idRonda]);
+
 
   useEffect(() => {
     const fetchCharlaSeleccionada = async () => {
@@ -133,6 +183,12 @@ const Charlas = () => {
       try {
         await ApiService.votarCharla(idCharla, idRonda);
         setVotoUsuario(idCharla);
+
+        // ✅ Mover la charla votada al inicio
+        const charlaVotada = charlas.find((charla) => charla.idCharla === idCharla);
+        const otrasCharlas = charlas.filter((charla) => charla.idCharla !== idCharla);
+        setCharlas([charlaVotada, ...otrasCharlas]);
+
         Swal.fire("Voto registrado", "Tu voto se ha registrado con éxito.", "success");
       } catch (error) {
         Swal.fire("Error", "No se pudo registrar tu voto. Inténtalo de nuevo.", "error");
@@ -177,9 +233,10 @@ const Charlas = () => {
           )}
         </CountdownContainer>
       )}
-      {mostrarBotones && datosCargados && !cerrada && (
+      {mostrarBotones && datosCargados && !cerrada && !charlaCreada && (
         <AddButton onClick={goToNuevaCharla}>+ Agregar Charla</AddButton>
       )}
+
       {error && <p className="error">{error}</p>}
       {!error && charlas.length === 0 && (
         <p className="text-center">No hay charlas disponibles.</p>
