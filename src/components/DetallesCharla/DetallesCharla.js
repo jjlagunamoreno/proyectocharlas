@@ -6,12 +6,14 @@ import Global from "../../utils/Global";
 
 const DetallesCharla = () => {
     const { idCharla } = useParams();
+    console.log("🆔 ID de la charla obtenido desde URL:", idCharla);
     const navigate = useNavigate();
     const [charla, setCharla] = useState(null);
     const [error, setError] = useState(null);
     const [comentarios, setComentarios] = useState([]);
     const [nuevoComentario, setNuevoComentario] = useState("");
     const [reloadTrigger, setReloadTrigger] = useState(0);
+    const [charlaVotada, setCharlaVotada] = useState(false);
 
     const fetchCharla = async () => {
         try {
@@ -26,6 +28,7 @@ const DetallesCharla = () => {
 
     useEffect(() => {
         fetchCharla();
+        checkCharlaVotada();
     }, [idCharla, reloadTrigger]);
 
     const handleAddComment = async () => {
@@ -48,6 +51,38 @@ const DetallesCharla = () => {
             setError("No se pudo agregar el comentario.");
         }
     };
+
+    const checkCharlaVotada = async () => {
+        try {
+            const voto = await ApiService.getVotoAlumnoRonda(idCharla);
+            if (voto) {
+                setCharlaVotada(true);
+            }
+        } catch (error) {
+            console.error("Error al verificar si la charla ha sido votada:", error);
+        }
+    };
+
+
+    const handleDeleteCharla = async () => {
+
+        if (!window.confirm("¿Estás seguro de que deseas eliminar esta charla? Esta acción no se puede deshacer.")) {
+            return;
+        }
+
+        try {
+            console.log(`🛑 Intentando eliminar charla con ID: ${idCharla}`);
+
+            await ApiService.deleteCharla(idCharla);
+
+            alert("✅ Charla eliminada con éxito.");
+            navigate("/rondas", { replace: true });
+        } catch (error) {
+            console.error("⚠️ Error al eliminar la charla:", error);
+            setError(error.message || "No se pudo eliminar la charla.");
+        }
+    };
+
 
     const handleEditComment = async (comentario) => {
         const nuevoContenido = prompt("Edita tu comentario:", comentario.contenido);
@@ -96,6 +131,18 @@ const DetallesCharla = () => {
                         alt="Charla"
                         className="img-fluid rounded mb-3"
                     />
+
+                    {charla && charla.charla.idUsuario === Global.userId && (
+                        <div className="d-flex justify-content-end">
+                            <button
+                                className="btn btn-danger mt-3"
+                                style={{ color: "white", backgroundColor: "red", borderColor: "darkred" }}
+                                onClick={handleDeleteCharla}
+                            >
+                                🗑️ Eliminar Charla
+                            </button>
+                        </div>
+                    )}
 
                     <h5>Recursos</h5>
                     {charla.recursos.length > 0 ? (

@@ -65,8 +65,13 @@ const Form = () => {
         preConfirm: () => {
           const newPassword = document.getElementById('new-password').value;
           const repeatPassword = document.getElementById('repeat-password').value;
+          if (!newPassword || !repeatPassword) {
+            Swal.showValidationMessage('Porfavor, complete ambos campos!');
+            return false;
+          }
           if (newPassword !== repeatPassword) {
             Swal.showValidationMessage('Las contraseñas no coinciden');
+            return false;
           }
           return { newPassword };
         }

@@ -184,20 +184,20 @@ const ApiService = {
         }
     },
 
-    getVotoAlumnoRonda: async (idRonda) => {
+    getVotoAlumnoRonda: async (idCharla) => {
         try {
-            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoRonda/${idRonda}`, {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoCharla/${idCharla}`, {
                 headers: {
-                    Authorization: Global.token,
+                    "Authorization": Global.token,
                 },
             });
 
             if (!response.ok) {
-                if (response.status === 404) return null; // Sin votos para esta ronda
-                throw new Error("Error al obtener el voto del alumno");
+                if (response.status === 404) return null; // No se encontró voto
+                throw new Error("Error al obtener el estado del voto.");
             }
 
-            return await response.json();
+            return await response.json(); // Devuelve los datos del voto
         } catch (error) {
             console.error("Error en getVotoAlumnoRonda:", error);
             throw error;
@@ -344,6 +344,96 @@ const ApiService = {
 
         } catch (error) {
             console.error("Error en updateEstadoUsuario:", error);
+            throw error;
+        }
+    },
+
+    // Eliminar una charla
+    deleteCharla: async (idCharla) => {
+        try {
+            if (!Global.token) {
+                throw new Error("No hay un token de autenticación disponible.");
+            }
+
+            console.log(`🔄 Eliminando charla con ID: ${idCharla}`);
+            console.log(`🔑 Usando token: ${Global.token}`);
+
+            const response = await fetch(`${Global.urlAlumnos}api/Charlas/${idCharla}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": Global.token, // Usar el token correctamente
+                    "Accept": "*/*"
+                },
+            });
+
+            console.log(`📡 Respuesta de la API (DELETE Charla ${idCharla}):`, response);
+
+            if (response.status === 401) {
+                throw new Error("🔒 No autorizado. Verifica el token de autenticación.");
+            }
+            if (response.status === 404) {
+                throw new Error("❌ No se encontró la charla para eliminar.");
+            }
+            if (!response.ok) {
+                throw new Error("⚠️ Error inesperado al eliminar la charla.");
+            }
+
+            console.log("✅ Charla eliminada correctamente.");
+            return true;
+        } catch (error) {
+            console.error("🔥 Error en deleteCharla:", error);
+            throw error;
+        }
+    },
+
+    // Crear una nueva charla
+    createCharla: async (charlaData) => {
+        try {
+            console.log("📡 Enviando solicitud a la API de Charlas...");
+            console.log("🔹 Datos de la charla:", JSON.stringify(charlaData, null, 2));
+
+            const response = await fetch(`${Global.urlAlumnos}api/Charlas`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Global.token}`, // Asegurar formato correcto
+                },
+                body: JSON.stringify(charlaData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("⚠️ Respuesta de la API:", errorText);
+                throw new Error(`Error al crear la charla: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("🔥 Error en createCharla:", error);
+            throw error;
+        }
+    },
+
+    // Subir imagen de la charla
+    uploadImagenCharla: async (idCharla, formData) => {
+        try {
+            console.log("📡 Subiendo imagen...");
+
+            const response = await fetch(`${Global.urlAlumnos}api/Files/UploadImagenCharla/${idCharla}`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${Global.token}` }, // Sin Content-Type
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("⚠️ Respuesta de la API:", errorText);
+                throw new Error(`Error al subir imagen: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("🔥 Error en uploadImagenCharla:", error);
             throw error;
         }
     },
