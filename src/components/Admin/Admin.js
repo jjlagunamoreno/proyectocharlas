@@ -47,8 +47,58 @@ export default class Admin extends Component {
         }
     }
 
+    // Función para crear un nuevo curso
+    crearCurso = async () => {
+      const { value: formValues } = await Swal.fire({
+        title: 'Crear Nuevo Curso',
+        html:
+          '<input id="id-curso" class="swal2-input" placeholder="ID del Curso">' +
+          '<input id="nombre-curso" class="swal2-input" placeholder="Nombre del Curso">' +
+          '<input id="fecha-inicio" type="date" class="swal2-input" placeholder="Fecha de Inicio">' +
+          '<input id="fecha-fin" type="date" class="swal2-input" placeholder="Fecha de Fin">',
+        focusConfirm: false,
+        preConfirm: () => {
+          const idCurso = parseInt(document.getElementById('id-curso').value, 10);
+          const nombre = document.getElementById('nombre-curso').value;
+          const fechaInicio = document.getElementById('fecha-inicio').value;
+          const fechaFin = document.getElementById('fecha-fin').value;
+          if (!idCurso || !nombre || !fechaInicio || !fechaFin) {
+            Swal.showValidationMessage('Por favor, complete todos los campos');
+            return false;
+          }
+          return { idCurso, nombre, fechaInicio, fechaFin };
+        }
+      });
     
-
+      if (formValues) {
+        try {
+          const nuevoCurso = {
+            idCurso: formValues.idCurso,
+            nombre: formValues.nombre,
+            fechaInicio: new Date(formValues.fechaInicio).toISOString(),
+            fechaFin: new Date(formValues.fechaFin).toISOString(),
+            activo: true
+          };
+    
+          const response = await axios.post(`${Global.urlAlumnos}api/Cursos`, nuevoCurso, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: Global.token
+            }
+          });
+    
+          if (response.status === 200) {
+            Swal.fire('Curso creado', '', 'success');
+            this.loadCursos(); // Recargar la lista de cursos
+          } else {
+            throw new Error('Error al crear el curso');
+          }
+        } catch (error) {
+          console.error('Error al crear el curso:', error);
+          Swal.fire('Error', 'No se pudo crear el curso', 'error');
+        }
+      }
+    }
 
     componentDidMount = () => {
         this.loadCursos();
@@ -118,7 +168,7 @@ export default class Admin extends Component {
       <div className='contenido'>
         <h1>Panel De Control Admin</h1>
         <div className='box-btn-admin'>
-            <button type="button" className="button-admin">
+            <button type="button" className="button-admin" onClick={this.crearCurso}>
                 <span className="button__text-admin">Crear Curso</span>
                 <span className="button__icon-admin"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" stroke="currentColor" height="24" fill="none" className="svg-admin"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
             </button>
