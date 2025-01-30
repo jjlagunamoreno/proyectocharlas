@@ -6,6 +6,7 @@ import Form from './Form';
 import './Perfil.css'; // Importar el archivo de estilos
 import { ProfileImageContext } from '../../context/ProfileImageContext';
 import { PasswordContext } from '../../context/PasswordContext';
+import errorImage from "../../assets/images/error404.png"; // Import fallback image
 
 export default function Perfil() {
   const [profile, setProfile] = useState(null);
@@ -73,6 +74,10 @@ export default function Perfil() {
     maxSize: 5000000,
   });
 
+  const handleImageError = (e) => {
+    e.target.src = errorImage; // Set fallback image on error
+  };
+
   if (!profile) {
     return <div>Loading...</div>;
   }
@@ -105,7 +110,7 @@ export default function Perfil() {
           <div className="perfil-charlas-grid">
             {charlas.map((charla, index) => (
               <div key={index} className="perfil-charla-card">
-                <img src={charla.imagenCharla} alt={charla.titulo} className="perfil-charla-image" />
+                <img src={charla.imagenCharla} alt={charla.titulo} className="perfil-charla-image" onError={handleImageError} />
                 <div className="perfil-charla-content">
                   <h3>{charla.titulo}</h3>
                   <p><strong>Descripción:</strong> {charla.descripcion}</p>

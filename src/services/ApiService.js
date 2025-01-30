@@ -352,6 +352,40 @@ const ApiService = {
     isAuthenticated: () => {
         return !!Global.token;
     },
+
+    getRondas: async () => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Rondas/RondasCurso`, {
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al obtener las rondas");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error en getRondas:", error);
+            throw error;
+        }
+    },
+
+    getProximaRonda: async () => {
+        try {
+            const rondas = await ApiService.getRondas();
+            const now = new Date();
+            const proximaRonda = rondas
+                .filter(ronda => new Date(ronda.fechaPresentacion) > now)
+                .sort((a, b) => new Date(a.fechaPresentacion) - new Date(b.fechaPresentacion))[0];
+
+            return proximaRonda;
+        } catch (error) {
+            console.error("Error en getProximaRonda:", error);
+            throw error;
+        }
+    },
 };
 
 export default ApiService;

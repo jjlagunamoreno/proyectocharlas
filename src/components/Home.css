@@ -1,3 +1,14 @@
+/* Importa la fuente personalizada */
+@font-face {
+    font-family: 'HappyTown';
+    src: url('../assets/fonts/HappyTown.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'JanuaryNight';
+    src: url('../assets/fonts/JanuaryNight.ttf') format('truetype');
+}
+
 /*CSS SHAPED FORM*/
 .custom-shape-divider-top-1738155079 {
     position: absolute;
@@ -19,61 +30,117 @@
 .custom-shape-divider-top-1738155079 .shape-fill {
     fill: #21264D;
 }
+
 /*CSS Home*/
+* {
+    box-sizing: border-box;
+}
 
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     color: black;
+    height: 100vh; /* Asegura que el body ocupe toda la altura de la ventana */
 }
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
+.home_left .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
-.content {
-    width: 90%;
-    margin: 30% 0 15% 20%;
-    max-width: 800px;
-}
-h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-}
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-.social-icons a {
-    color: white;
-    font-size: 1.5em;
-    text-decoration: none;
-}
-.illustration {
-    max-width: 100%;
-    margin-left: 20%;
-    height: auto;
-}
-.illustration img{
-    width: 100%;
-    height: auto;
-}
-@media (min-width: 768px) {
-    .container {
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
+
+/* Animaciones */
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
     }
-    .content {
-        text-align: left;
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Estilos para pantallas con un ancho menor a 768 píxeles */
+@media (max-width: 767px) {
+    .home_container {
+        flex-direction: column; /* Cambia la dirección del flex a columna */
+        align-items: center; /* Alinea verticalmente */
+        justify-content: center; /* Alinea horizontalmente */
+        margin-left: 80px; /* El mismo ancho que el menú */
+        width: calc(100% - 80px); /* Resta el ancho del menú */
+        padding: 20px;
+    }
+    .home_left {
+        text-align: center;
+        margin: 30% auto 10% auto;
+        animation: slideInUp 1s ease-out; /* Aplica la animación */
+    }
+
+    .home_left h1{
+        font-family: 'HappyTown', Arial, sans-serif; /* Aplica la fuente personalizada */
+        font-size: 56px;
+    }
+
+    .home_left p{
+        font-family: 'JanuaryNight', Arial, sans-serif; /* Aplica la fuente personalizada */
+        font-size: 32px;
+    }
+    .home_right img {
+        width: 100%;
+        animation: slideInRight 1s ease-out; /* Aplica la animación */
+    }
+
+}
+
+@media (min-width: 768px) {
+    .home_container {
+        display: flex;
+        align-items: center; /* Alinea verticalmente */
+        justify-content: space-between; /* Alinea horizontalmente */
+        margin-left: 80px; /* El mismo ancho que el menú */
+        width: calc(100% - 80px); /* Resta el ancho del menú */
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .home_left {
+        width: 49%;
+        text-align: center;
+        animation: slideInUp 1s ease-out; /* Aplica la animación */
+    }
+
+    .home_left h1{
+        font-family: 'HappyTown', Arial, sans-serif; /* Aplica la fuente personalizada */
+        font-size: 56px;
+    }
+
+    .home_left p{
+        font-family: 'JanuaryNight', Arial, sans-serif; /* Aplica la fuente personalizada */
+        font-size: 32px;
+    }
+
+    .home_right {
+        width: 49%;
+        animation: slideInRight 1s ease-out; /* Aplica la animación */
+    }
+    .home_right img {
+        width: 100%;
+    }
+    .home_cb {
+        clear: both;
     }
 }
