@@ -74,7 +74,22 @@ const AdminService = {
         } catch (error) {
             console.error(error)
         }
-    }, 
+    },
+
+    PostCursoProfesor: async(idUsuario, idCurso) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/CursosUsuarios/post/${idUsuario}/${idCurso}`, {
+                method: "POST",
+                headers: {
+                    Authorization: Global.token,
+                }
+            })
+
+            return await response.json();
+        } catch (error) {
+            console.error(error)
+        }
+    },
 }
 
 export default AdminService;

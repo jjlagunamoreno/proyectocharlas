@@ -129,12 +129,49 @@ export default class Admin extends Component {
         console.error("Error al cargar los usuarios", error);
       }
     }
+
+    anadirCursoProfe = async (idUsuario) => {
+      Swal.fire({
+        title: "Introduce el ID del curso",
+        input: "text",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        showLoaderOnConfirm: true,preConfirm: async (idCurso) => {
+          try {
+            AdminService.PostCursoProfesor(idUsuario, idCurso)
+          } catch (error) {
+            console.log(error)
+          }
+        },
+      })
+    }
   
   showInfoUser = async (id, user) => {
     let usuario;
-
+    let btn;
     if(user === 'profesor'){
       usuario = this.state.profesores.find((profe) => profe.idUsuario === id)
+      btn = (
+        <div className="box-btn-admin-profe">
+          <button 
+            type="button" 
+            className="button-admin"
+            onClick={() => { this.anadirCursoProfe(usuario.idUsuario) }}
+          >
+            <span className="button__text-admin" style={{ fontSize: '12px' }}>Añadir Curso</span>
+            <span className="button__icon-admin">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" stroke="currentColor" height="24" fill="none" className="svg-admin">
+                <line y2="19" y1="5" x2="12" x1="12"></line>
+                <line y2="12" y1="12" x2="19" x1="5"></line>
+              </svg>
+            </span>
+          </button>
+        </div>
+      );
+      
       
     }else if(user === 'alumno'){
       usuario = this.state.alumnos.find((alumno) => alumno.idUsuario === id)
@@ -172,14 +209,15 @@ export default class Admin extends Component {
     
     
     withReactContent(Swal).fire({
-      html: `
-            <div style="text-align: center;">
-                ${imagen}
-                ${nombre}
-                ${email}
-                ${divsCursos}
-            </div>
-      `,
+      html: (
+        <div style={{ textAlign: 'center' }}>
+          <div dangerouslySetInnerHTML={{ __html: imagen }} />
+          <div dangerouslySetInnerHTML={{ __html: nombre }} />
+          <div dangerouslySetInnerHTML={{ __html: email }} />
+          {btn}
+          <div dangerouslySetInnerHTML={{ __html: divsCursos }} />
+        </div>
+      ),
       confirmButtonColor: "#3085d6",
       confirmButtonText: "Ok",
     });
@@ -201,7 +239,7 @@ export default class Admin extends Component {
 
   estadoCurso = async (idCurso, estado) => {
     const result = await withReactContent(Swal).fire({
-      html:`Estado: ${estado}` ,
+      html: `Estado: ${estado}`,
       title: "Cambiar el estado del curso",
       text: "¿Estas seguro de cambiar el estado del curso?",
       icon: "warning",
