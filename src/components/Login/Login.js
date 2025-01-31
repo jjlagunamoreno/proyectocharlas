@@ -105,8 +105,20 @@ const Login = ({ setIsAuthenticated }) => {
         await ApiService.registerAlumno(registerData.codigoCurso, requestBody);
         Swal.fire("✅ Registro exitoso", "Te has registrado como alumno.", "success");
       } else {
-        await ApiService.registerProfesor(requestBody);
-        Swal.fire("✅ Registro exitoso", "Te has registrado como profesor.", "success");
+        const profesorResponse = await ApiService.registerProfesor(requestBody);
+        const { idUsuario } = profesorResponse;
+
+        // Iniciar sesión como profesor
+        const loginResponse = await ApiService.login({
+          userName: registerData.email,
+          password: registerData.password,
+        });
+
+        if (loginResponse.token) {
+          // Asignar el curso al profesor
+          await ApiService.asignarCursoProfesor(idUsuario, registerData.codigoCurso);
+          Swal.fire("✅ Registro exitoso", "Te has registrado como profesor y se te ha asignado el curso.", "success");
+        }
       }
 
       navigate("/"); // REDIRIGIR AL LOGIN TRAS REGISTRO EXITOSO

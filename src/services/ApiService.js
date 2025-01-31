@@ -126,6 +126,26 @@ const ApiService = {
         }
     },
 
+    asignarCursoProfesor: async (idUsuario, idCurso) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/CursosUsuarios/post/${idUsuario}/${idCurso}`, {
+                method: "POST",
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to assign course to professor");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error assigning course to professor:", error);
+            throw error;
+        }
+    },
+
     // COMPONENTE Rondas y Charlas
     getCharlasByRonda: async (idRonda) => {
         try {
