@@ -75,29 +75,48 @@ const Login = ({ setIsAuthenticated }) => {
 
   // FUNCIÓN PARA ENVIAR LOS DATOS DE REGISTRO A LA API
   const handleRegisterSubmit = async (e) => {
-    e.preventDefault(); // PREVENIR EL COMPORTAMIENTO POR DEFECTO DEL FORMULARIO
+    e.preventDefault();
+
     try {
-      // CREAR EL CUERPO DE LA SOLICITUD PARA EL REGISTRO
+      // DETERMINAR EL ROL SEGÚN SI SE INGRESÓ CÓDIGO DE PROFESOR
+      const idRole = codigoProfesor.trim() === "yosoytuprofe" ? 1 : 2;
+
+      // ESTRUCTURA DEL CUERPO DE LA SOLICITUD
       const requestBody = {
-        idUsuario: 0, // EL ID SE GENERA AUTOMÁTICAMENTE EN LA API
+        idUsuario: 0,
         nombre: registerData.nombre,
         apellidos: registerData.apellidos,
         email: registerData.email,
-        estadoUsuario: true, // POR DEFECTO EL USUARIO ESTÁ ACTIVO
-        imagen: "imagen.png", // IMAGEN PREDETERMINADA
+        estadoUsuario: true,
+        imagen: "imagen.png",
         password: registerData.password,
-        idRole: 2, // ROL PARA ALUMNOS
+        idRole: idRole, // SE ASIGNA EL ROL SEGÚN EL CÓDIGO INGRESADO
       };
 
-      // LLAMADA AL MÉTODO registerAlumno EN ApiService
-      await ApiService.registerAlumno(registerData.codigoCurso, requestBody);
+      console.log(`📡 Registrando como ${idRole === 1 ? "profesor" : "alumno"}...`);
 
-      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      if (idRole === 2) {
+        // SI ES ALUMNO, VALIDAR QUE EL CÓDIGO DE CURSO SEA VÁLIDO
+        if (!registerData.codigoCurso || isNaN(registerData.codigoCurso)) {
+          Swal.fire("❌ Error", "Debes proporcionar un código de curso válido.", "error");
+          return;
+        }
+
+        await ApiService.registerAlumno(registerData.codigoCurso, requestBody);
+        Swal.fire("✅ Registro exitoso", "Te has registrado como alumno.", "success");
+      } else {
+        await ApiService.registerProfesor(requestBody);
+        Swal.fire("✅ Registro exitoso", "Te has registrado como profesor.", "success");
+      }
+
+      navigate("/"); // REDIRIGIR AL LOGIN TRAS REGISTRO EXITOSO
     } catch (err) {
-      console.error("Error al registrar:", err);
-      setError("No se pudo completar el registro."); // MENSAJE DE ERROR EN CASO DE FALLA
+      console.error("🔥 Error en el registro:", err);
+      Swal.fire("❌ Error en el registro", "No se pudo completar el proceso.", "error");
     }
   };
+
+  const [codigoProfesor, setCodigoProfesor] = useState("");
 
   // FUNCIÓN PARA MOSTRAR EL FORMULARIO DE LOGIN
   const handleLoginClick = () => {
@@ -122,16 +141,21 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   const codigoProfesorPopUp = async () => {
-    const result = await withReactContent(Swal).fire({
-      title: "Introduce el codigo de profesor",
-      icon: "question",
+    const result = await Swal.fire({
+      title: "Introduce el código de profesor",
       input: "text",
-      showCancelButton: true
+      showCancelButton: true,
+      confirmButtonText: "Verificar",
+      cancelButtonText: "Cancelar",
     });
 
-    if (result.isConfirmed) {
+    if (result.isConfirmed && result.value.trim() !== "") {
+      setCodigoProfesor(result.value.trim()); // Guarda el código ingresado en el estado
+      console.log("✅ Código de profesor guardado:", result.value.trim());
+    } else {
+      setCodigoProfesor(""); // Asegurar que si se cancela, no tenga valor residual
     }
-  }
+  };
 
   return (
     <div className="cuerpoLogin">
@@ -203,7 +227,7 @@ const Login = ({ setIsAuthenticated }) => {
           <div className="register-form" ref={registerFormRef}>
             <form onSubmit={handleRegisterSubmit}>
               <div className="box-btn-profesor">
-                <button onClick={() => {codigoProfesorPopUp()}}>
+                <button onClick={() => { codigoProfesorPopUp() }}>
                   <span className="shadow"></span>
                   <span className="edge"></span>
                   <span className="front text"> ¿Eres profesor?
