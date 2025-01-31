@@ -278,7 +278,6 @@ const Charlas = () => {
         >
           ❌ Eliminar Ronda
         </button>
-
       )}
 
       {error && <p className="error">{error}</p>}
