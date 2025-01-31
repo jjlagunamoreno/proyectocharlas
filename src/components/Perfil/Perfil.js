@@ -7,6 +7,7 @@ import './Perfil.css'; // Importar el archivo de estilos
 import { ProfileImageContext } from '../../context/ProfileImageContext';
 import { PasswordContext } from '../../context/PasswordContext';
 import errorImage from "../../assets/images/error404.png"; // Import fallback image
+import { Link } from "react-router-dom";
 
 export default function Perfil() {
   const [profile, setProfile] = useState(null);
@@ -56,14 +57,14 @@ export default function Perfil() {
         const refreshedProfileData = await ApiService.getUserProfile();
         setProfile(refreshedProfileData.usuario);
         setGlobalProfile(refreshedProfileData.usuario);
-        
+
         alert("Imagen de perfil actualizada con éxito.");
       } catch (error) {
         console.error('Error uploading file:', error);
       }
     };
   }, [profile, setGlobalProfile, currentPassword]);
-  
+
   useEffect(() => {
     console.log('File URL updated:', fileUrl);
   }, [fileUrl]);
@@ -109,15 +110,17 @@ export default function Perfil() {
         ) : (
           <div className="perfil-charlas-grid">
             {charlas.map((charla, index) => (
-              <div key={index} className="perfil-charla-card">
-                <img src={charla.imagenCharla} alt={charla.titulo} className="perfil-charla-image" onError={handleImageError} />
-                <div className="perfil-charla-content">
-                  <h3>{charla.titulo}</h3>
-                  <p><strong>Descripción:</strong> {charla.descripcion}</p>
-                  <p><strong>Fecha Propuesta:</strong> {new Date(charla.fechaPropuesta).toLocaleDateString()}</p>
-                  <p><strong>Estado:</strong> {charla.estadoCharla}</p>
+              <Link key={index} to={`/detallescharla/${charla.idCharla}`} className="perfil-charla-link">
+                <div className="perfil-charla-card">
+                  <img src={charla.imagenCharla} alt={charla.titulo} className="perfil-charla-image" onError={handleImageError} />
+                  <div className="perfil-charla-content">
+                    <h3>{charla.titulo}</h3>
+                    <p><strong>Descripción:</strong> {charla.descripcion}</p>
+                    <p><strong>Fecha Propuesta:</strong> {new Date(charla.fechaPropuesta).toLocaleDateString()}</p>
+                    <p><strong>Estado:</strong> {charla.estadoCharla}</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

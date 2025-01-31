@@ -11,8 +11,9 @@ const Rondas = () => {
   const [rondas, setRondas] = useState([]);
   const [curso, setCurso] = useState("");
   const [error, setError] = useState(null);
+  const [esProfesor, setEsProfesor] = useState(false); // Estado para verificar si es profesor
   const navigate = useNavigate();
-  const calendarRef = useRef(null); // Referencia para el calendario
+  const calendarRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +28,11 @@ const Rondas = () => {
           { headers: { Authorization: Global.token } }
         );
         setCurso(perfilResponse.data.usuario.curso);
+
+        // Verificar si el usuario es profesor
+        if (perfilResponse.data.usuario.idRole === 1) {
+          setEsProfesor(true);
+        }
 
         // Obtener rondas del curso
         const rondasResponse = await axios.get(
@@ -74,16 +80,6 @@ const Rondas = () => {
     }
   };
 
-  const handlePrevClick = () => {
-    const calendarApi = calendarRef.current.getApi(); // Obtener la API del calendario
-    calendarApi.prev();
-  };
-
-  const handleNextClick = () => {
-    const calendarApi = calendarRef.current.getApi(); // Obtener la API del calendario
-    calendarApi.next();
-  };
-
   return (
     <div className="rondas-container">
       {curso && (
@@ -107,7 +103,24 @@ const Rondas = () => {
           </svg>{" "} {curso}
         </h1>
       )}
+
       {error && <p className="error">{error}</p>}
+
+      {/* Mostrar botón solo si el usuario es profesor */}
+      {esProfesor && (
+        <button className="btn btn-primary" style={{
+          backgroundColor: "#007bff",
+          color: "white",
+          borderColor: "#007bff",
+          padding: "10px 15px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          transition: "background-color 0.3s ease",
+        }} onClick={() => navigate("/CrearRonda")}>
+          + Nueva Ronda
+        </button>
+      )}
+
       {!error && (
         <FullCalendar
           ref={calendarRef}
@@ -116,6 +129,24 @@ const Rondas = () => {
           locale="es"
           firstDay={1}
           events={getEvents()}
+          eventClick={handleEventClick}
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "",
+          }}
+          buttonText={{
+            today: "Hoy",
+          }}
+          height="auto"
+          contentHeight="auto"
+          dayMaxEventRows={3}
+          customButtons={{
+            title: {
+              text: "enero de 2025",
+              click: () => { },
+            },
+          }}
           eventContent={(eventInfo) => {
             const { modulo, circleColor } = eventInfo.event.extendedProps;
             return (
@@ -128,18 +159,6 @@ const Rondas = () => {
               </div>
             );
           }}
-          eventClick={handleEventClick}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "",
-          }}
-          buttonText={{
-            today: "Hoy", // Cambiar texto de "Today" a "Hoy"
-          }}
-          height="auto"
-          contentHeight="auto"
-          dayMaxEventRows={3}
         />
 
       )}

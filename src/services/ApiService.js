@@ -184,20 +184,20 @@ const ApiService = {
         }
     },
 
-    getVotoAlumnoRonda: async (idCharla) => {
+    getVotoAlumnoRonda: async (idRonda) => {
         try {
-            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoCharla/${idCharla}`, {
+            const response = await fetch(`${Global.urlAlumnos}api/Votos/VotoAlumnoRonda/${idRonda}`, {
                 headers: {
-                    "Authorization": Global.token,
+                    Authorization: Global.token,
                 },
             });
 
             if (!response.ok) {
-                if (response.status === 404) return null; // No se encontró voto
-                throw new Error("Error al obtener el estado del voto.");
+                if (response.status === 404) return null; // Sin votos para esta ronda
+                throw new Error("Error al obtener el voto del alumno");
             }
 
-            return await response.json(); // Devuelve los datos del voto
+            return await response.json();
         } catch (error) {
             console.error("Error en getVotoAlumnoRonda:", error);
             throw error;
@@ -471,6 +471,52 @@ const ApiService = {
             return await response.json();
         } catch (error) {
             console.error("Error en getRondas:", error);
+            throw error;
+        }
+    },
+
+    createRonda: async (rondaData) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Profesor/CreateRonda`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify(rondaData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al crear la ronda.");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("🔥 Error en createRonda:", error);
+            throw error;
+        }
+    },
+
+    deleteRonda: async (idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Profesor/DeleteRonda/${idRonda}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+    
+            if (response.status === 404) {
+                throw new Error("No se encontró la ronda para eliminar.");
+            }
+    
+            if (!response.ok) {
+                throw new Error("Error al eliminar la ronda.");
+            }
+    
+            return true; // Indica que la eliminación fue exitosa
+        } catch (error) {
+            console.error("🔥 Error en deleteRonda:", error);
             throw error;
         }
     },

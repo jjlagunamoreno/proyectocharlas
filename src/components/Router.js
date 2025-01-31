@@ -10,6 +10,7 @@ import NotFound404 from "./NothingFoundBackground/NothingFoundBackground";
 import ApiService from "../services/ApiService";
 import Curso from "../components/Curso/ListaUsuarios";
 import Perfil from "./Perfil/Perfil";
+import CrearRonda from "./CrearRonda/CrearRonda";
 import { ProfileImageProvider } from "../context/ProfileImageContext";
 import { PasswordProvider } from "../context/PasswordContext";
 import DetallesCharla from "../components/DetallesCharla/DetallesCharla";
@@ -40,6 +41,7 @@ const Router = () => {
                                 <Route path="/detallescharla/:idCharla"
                                     element={<DetallesCharla />} />
                                 <Route path="/charlas/:idRonda/nuevacharla" element={<NuevaCharla />} />
+                                <Route path="/CrearRonda" element={<CrearRonda />} />
                                 <Route path="*" element={<NotFound404 />} />
                             </>
                         ) : (
