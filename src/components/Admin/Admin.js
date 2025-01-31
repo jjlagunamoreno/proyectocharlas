@@ -14,7 +14,8 @@ export default class Admin extends Component {
         anios: [],
         anioSeleccionado: '',
         profesores: [],
-        alumnos: []
+        alumnos: [],
+        idsCursosProfe: []
     }
 
     // Filtrar los cursos según el año seleccionado
@@ -78,8 +79,33 @@ export default class Admin extends Component {
       }
     }
   
-  showInfoUser = async (id) => {
-    const usuario = this.state.alumnos.find((alumno) => alumno.idUsuario === id)
+  showInfoUser = async (id, user) => {
+    let usuario;
+
+    if(user === 'profesor'){
+      usuario = this.state.profesores.find((profe) => profe.idUsuario === id)
+      
+    }else if(user === 'alumno'){
+      usuario = this.state.alumnos.find((alumno) => alumno.idUsuario === id)
+    }
+
+    const cursos = await AdminService.GetCursosProfe(); // Obtienes todos los cursos del profesor
+    // Filtrar los cursos donde idUsuarioCurso coincida con idUsuario
+    const idsCursos = cursos.filter(curso => curso.idUsuario === id);
+    let idsAPoner = []
+    for (let i = 0; i < idsCursos.length; i++) {
+      idsAPoner.push(idsCursos[i].idCurso)
+    }
+    // Actualizamos el estado y esperamos a que se haya completado
+    await new Promise(resolve => this.setState({
+      idsCursosProfe: idsAPoner
+    }, resolve));
+    const {idsCursosProfe} = this.state
+    let divsCursos = "";  // Aseguramos que divsCursos sea una cadena vacía al principio
+    for (let i = 0; i < idsCursosProfe.length; i++) {
+      const cursoInfo = await AdminService.GetInfoCurso(idsCursosProfe[i])
+      divsCursos += `<div class="box-cursos-info"><b>${idsCursosProfe[i]}</b> ${cursoInfo.nombre}</div>`; // Usamos el operador += para concatenar
+    }
 
     // Verificamos si la imagen comienza con "http" o "https"
     let imagenUrl = usuario.imagen;
@@ -87,31 +113,40 @@ export default class Admin extends Component {
         // Si no es una URL externa, asignamos una imagen local por defecto
         imagenUrl = defaultImage; // Asegúrate de tener esta imagen local en tu proyecto
     }
+    
 
     const nombre = `<h3>${usuario.usuario}</h3>`;
     const imagen = `<img class="img-info" src="${imagenUrl}" alt="Imagen de usuario" style="width: 100px; height: 100px;">`;
-    const email = `<p>${usuario.email} ${usuario.idUsuario}</p>`;
-
-    const result = await withReactContent(Swal).fire({
+    const email = `<p>${usuario.email}</p>`;
+    
+    
+    withReactContent(Swal).fire({
       html: `
             <div style="text-align: center;">
                 ${imagen}
                 ${nombre}
                 ${email}
+                ${divsCursos}
             </div>
       `,
       confirmButtonColor: "#3085d6",
       confirmButtonText: "Ok",
     });
+  }
 
-    // if (result.isConfirmed) {
-    //   // Primero actualizamos el estado del usuario
-    //   await ApiService.updateEstadoUsuario(idUsuario, estado);
+  cursosProfesor = async (idProfe) => {
+    try {
+  
+      const response = await AdminService.GetCursosProfe();
+      console.log(idProfe)
+      console.log(response)
 
-    //   // Luego recargamos los usuarios
-    //   await this.loadUsuarios();
-    // }
-}
+      this.setState({
+      })
+    } catch (error) {
+      console.error("Error al cargar los cursos", error);
+    }
+  }
 
   render() {
     return (
@@ -157,7 +192,7 @@ export default class Admin extends Component {
                     {
                       this.state.profesores.map((profe, index) => {
                         return(
-                          <div key={index}>
+                          <div key={index} onClick={() => {this.showInfoUser(profe.idUsuario, 'profesor')}}>
                             <span>{profe.usuario}</span>
                           </div>
                         )
@@ -174,7 +209,7 @@ export default class Admin extends Component {
                       {
                         this.state.alumnos.map((alumno, index) => {
                           return(
-                            <div key={index} onClick={() => {this.showInfoUser(alumno.idUsuario)}}>
+                            <div key={index} onClick={() => {this.showInfoUser(alumno.idUsuario, 'alumno')}}>
                               <span>{alumno.usuario}</span>
                             </div>
                           )

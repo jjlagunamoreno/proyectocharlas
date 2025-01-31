@@ -197,3 +197,10 @@ select {
   height: 128px;
   border-radius: 100%;
 }
+
+.box-cursos-info{
+  background-color: rgb(238, 238, 238);
+  margin: 5px;
+  padding: 3px;
+  border-radius: 20px;
+}
