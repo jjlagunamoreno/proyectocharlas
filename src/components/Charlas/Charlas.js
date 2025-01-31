@@ -256,9 +256,12 @@ const Charlas = () => {
           )}
         </CountdownContainer>
       )}
-      {mostrarBotones && datosCargados && !cerrada && !charlaCreada && (
-        <AddButton onClick={goToNuevaCharla}>+ Agregar Charla</AddButton>
-      )}
+      {
+        Global.role === 2 && (
+          mostrarBotones && datosCargados && !cerrada && !charlaCreada && (
+            <AddButton onClick={goToNuevaCharla}>+ Agregar Charla</AddButton>
+          )
+        )}
 
       {Global.role === 1 && (
         <button
@@ -275,7 +278,6 @@ const Charlas = () => {
         >
           ❌ Eliminar Ronda
         </button>
-
       )}
 
       {error && <p className="error">{error}</p>}

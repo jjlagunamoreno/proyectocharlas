@@ -505,18 +505,76 @@ const ApiService = {
                     Authorization: Global.token,
                 },
             });
-    
+
             if (response.status === 404) {
                 throw new Error("No se encontró la ronda para eliminar.");
             }
-    
+
             if (!response.ok) {
                 throw new Error("Error al eliminar la ronda.");
             }
-    
+
             return true; // Indica que la eliminación fue exitosa
         } catch (error) {
             console.error("🔥 Error en deleteRonda:", error);
+            throw error;
+        }
+    },
+
+    registerAlumno: async (idCurso, alumnoData) => {
+        try {
+            if (!idCurso || isNaN(idCurso)) {
+                throw new Error("❌ ID del curso no válido.");
+            }
+    
+            console.log("📡 Enviando solicitud a:", `${Global.urlAlumnos}api/Usuarios/NewAlumno/${idCurso}`);
+            console.log("🔹 Datos del alumno:", JSON.stringify(alumnoData, null, 2));
+    
+            const response = await fetch(`${Global.urlAlumnos}api/Usuarios/NewAlumno/${idCurso}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(alumnoData),
+            });
+    
+            const responseText = await response.text(); // Obtener respuesta de la API
+    
+            console.log("📡 Respuesta de la API:", response.status, responseText);
+    
+            if (!response.ok) {
+                throw new Error(`Error al registrar el alumno. Código: ${response.status}`);
+            }
+    
+            return JSON.parse(responseText);
+        } catch (error) {
+            console.error("🔥 Error en registerAlumno:", error);
+            throw error;
+        }
+    },    
+
+    registerProfesor: async (profesorData) => {
+        try {
+            console.log("📡 Enviando datos de registro de profesor:", JSON.stringify(profesorData, null, 2));
+
+            const response = await fetch(`${Global.urlAlumnos}api/Profesor/NewProfesor/yosoytuprofe`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(profesorData),
+            });
+
+            const responseText = await response.text(); // Obtener respuesta en texto
+
+            if (!response.ok) {
+                console.error("⚠️ Error en la respuesta del profesor:", responseText);
+                throw new Error(`Error al registrar el profesor. Código: ${response.status}`);
+            }
+
+            return JSON.parse(responseText);
+        } catch (error) {
+            console.error("🔥 Error en registerProfesor:", error);
             throw error;
         }
     },
