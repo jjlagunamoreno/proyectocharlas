@@ -204,3 +204,17 @@ select {
   padding: 3px;
   border-radius: 20px;
 }
+
+
+.box-curso span {
+  float: left;
+}
+
+.box-curso img {
+  float: right;
+  width: 32px;
+}
+
+.box-curso img:hover {
+  cursor: pointer;
+}

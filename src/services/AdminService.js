@@ -59,7 +59,22 @@ const AdminService = {
         } catch (error) {
             console.error(error)
         }
-    }
+    }, 
+
+    UpdateEstadoCurso: async(idCurso, activo) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Cursos/UpdateEstadoCurso/${idCurso}/${activo}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: Global.token,
+                }
+            })
+
+            return await response.json();
+        } catch (error) {
+            console.error(error)
+        }
+    }, 
 }
 
 export default AdminService;

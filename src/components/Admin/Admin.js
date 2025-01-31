@@ -6,6 +6,7 @@ import AdminService from '../../services/AdminService'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import defaultImage from '../../assets/images/nopfp.png'
+import puntitos from '../../assets/images/puntitos.png'
 
 export default class Admin extends Component {
 
@@ -116,7 +117,7 @@ export default class Admin extends Component {
     
 
     const nombre = `<h3>${usuario.usuario}</h3>`;
-    const imagen = `<img class="img-info" src="${imagenUrl}" alt="Imagen de usuario" style="width: 100px; height: 100px;">`;
+    const imagen = `<img class="account_box_img_img" src="${imagenUrl}" alt="Imagen de usuario" style="width: 100px; height: 100px;">`;
     const email = `<p>${usuario.email}</p>`;
     
     
@@ -148,6 +149,33 @@ export default class Admin extends Component {
     }
   }
 
+  estadoCurso = async (idCurso, estado) => {
+    const result = await withReactContent(Swal).fire({
+      html:`Estado: ${estado}` ,
+      title: "Cambiar el estado del curso",
+      text: "¿Estas seguro de cambiar el estado del curso?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+      cancelButtonText: "No"
+    });
+
+    if (result.isConfirmed) {
+      const estadoC = !estado;
+      await AdminService.UpdateEstadoCurso(idCurso, estadoC);
+
+      await this.loadCursos();
+
+      Swal.fire({
+        title: "Actualizado!",
+        text: "El estado ha sido actualizado.",
+        icon: "success"
+      });
+    }
+  }
+
   render() {
     return (
       <div className='contenido'>
@@ -176,6 +204,9 @@ export default class Admin extends Component {
                     return (
                       <div className='box-curso' onClick={() => {this.mostrarUsuariosCurso(curso.idCurso)}} key={index}>
                         <span><b>{curso.idCurso}</b> {curso.nombre}</span>
+                        <div>
+                          <img src={puntitos} alt='puntos.png' onClick={() => {this.estadoCurso(curso.idCurso, curso.activo)}}/>
+                        </div>
                       </div>
                     )
                   })
