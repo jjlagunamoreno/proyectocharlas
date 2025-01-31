@@ -55,6 +55,29 @@ const Charlas = () => {
     fetchCharlas();
   }, [idRonda]);
 
+  const handleDeleteRonda = async (idRonda) => {
+    const { isConfirmed } = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará la ronda y todas sus charlas. No se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (isConfirmed) {
+      try {
+        await ApiService.deleteRonda(idRonda);
+        Swal.fire("Ronda eliminada", "La ronda ha sido eliminada correctamente.", "success");
+        navigate("/rondas"); // Redirigir tras la eliminación
+      } catch (error) {
+        Swal.fire("Error", "No se pudo eliminar la ronda.", "error");
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -235,6 +258,24 @@ const Charlas = () => {
       )}
       {mostrarBotones && datosCargados && !cerrada && !charlaCreada && (
         <AddButton onClick={goToNuevaCharla}>+ Agregar Charla</AddButton>
+      )}
+
+      {Global.role === 1 && (
+        <button
+          className="btn btn-danger mt-3"
+          style={{
+            backgroundColor: "#dc3545",
+            borderColor: "#dc3545",
+            padding: "10px 15px",
+            fontSize: "16px",
+            fontWeight: "bold",
+            transition: "background-color 0.3s ease",
+          }}
+          onClick={() => handleDeleteRonda(idRonda)}
+        >
+          ❌ Eliminar Ronda
+        </button>
+
       )}
 
       {error && <p className="error">{error}</p>}

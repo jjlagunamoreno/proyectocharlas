@@ -475,6 +475,52 @@ const ApiService = {
         }
     },
 
+    createRonda: async (rondaData) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Profesor/CreateRonda`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: Global.token,
+                },
+                body: JSON.stringify(rondaData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al crear la ronda.");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("🔥 Error en createRonda:", error);
+            throw error;
+        }
+    },
+
+    deleteRonda: async (idRonda) => {
+        try {
+            const response = await fetch(`${Global.urlAlumnos}api/Profesor/DeleteRonda/${idRonda}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: Global.token,
+                },
+            });
+    
+            if (response.status === 404) {
+                throw new Error("No se encontró la ronda para eliminar.");
+            }
+    
+            if (!response.ok) {
+                throw new Error("Error al eliminar la ronda.");
+            }
+    
+            return true; // Indica que la eliminación fue exitosa
+        } catch (error) {
+            console.error("🔥 Error en deleteRonda:", error);
+            throw error;
+        }
+    },
+
     getProximaRonda: async () => {
         try {
             const rondas = await ApiService.getRondas();

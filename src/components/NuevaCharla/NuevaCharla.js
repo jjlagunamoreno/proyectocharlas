@@ -174,7 +174,16 @@ const NuevaCharla = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="btn btn-primary" style={{
+          backgroundColor: "#007bff",
+          color: "white",
+          borderColor: "#007bff",
+          padding: "10px 15px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          transition: "background-color 0.3s ease",
+        }}
+          disabled={loading}>
           {loading ? "Guardando..." : "Guardar Charla"}
         </button>
       </form>
