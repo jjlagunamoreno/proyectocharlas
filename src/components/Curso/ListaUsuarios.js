@@ -95,6 +95,7 @@ export default class ListaUsuarios extends Component {
         text: "El estado ha sido actualizado.",
         icon: "success"
       });
+      this.loadUsuarios(estado);
     }
   };
 
@@ -126,6 +127,7 @@ export default class ListaUsuarios extends Component {
         text: "El estado ha sido actualizado.",
         icon: "success"
       });
+      this.loadUsuarios(estado);
     }
   };
 
