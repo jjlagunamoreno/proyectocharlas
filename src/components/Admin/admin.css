@@ -162,7 +162,7 @@
 .titulo-box {
   position: absolute;
   font-weight: bold;
-  background-color: white;
+  background-color: #f8f9fa;
   margin-top: -10px;
   width: 80%;
   border-radius: 8px 0 0 0;
@@ -201,6 +201,7 @@ select {
 .box-cursos-info{
   background-color: rgb(238, 238, 238);
   margin: 5px;
+  margin-top: 10px;
   padding: 3px;
   border-radius: 20px;
 }
@@ -217,4 +218,11 @@ select {
 
 .box-curso img:hover {
   cursor: pointer;
+}
+
+.box-btn-admin-profe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }
